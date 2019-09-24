@@ -11,7 +11,7 @@ def find_rect_of_target_color(image):
     h = hsv[:, :, 0]
     s = hsv[:, :, 1]
     mask = np.zeros(h.shape, dtype=np.uint8)
-    mask[((h < 20) | (h > 200)) & (s > 128)] = 255
+    mask[(h < 190) & (h > 150) & (s > 128)] = 255
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     rects = []
     for contour in contours:
