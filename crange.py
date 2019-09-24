@@ -1,10 +1,7 @@
 #ライブラリ
 import cv2 #映像処理
 import numpy as np
-
-
-import cv2
-import numpy as np
+import math
 
 def find_circle_of_target_color(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV_FULL)
@@ -29,13 +26,17 @@ def main():
     while cv2.waitKey(30) < 0:
         _, frame = capture.read()
         circles = find_circle_of_target_color(frame)
-        print(circles)
         for circle in circles:
-            xy = list((circle[0:2])+list(circle[0:2] + circle[2:4]))
+            xy = list(circle[0:2] + circle[0:2] + circle[2:4])
             for i in range(2):
                 xy[i] = xy[i] // 2
-            print(xy)
-            cv2.circle(frame, xy[0], xy[1], 20, (0, 0, 255), thickness=2)
+            point = list(circle[0:2])
+            for i in range(2):
+                point[i] -= xy[i]
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
+            print(xy,point,r)
+            
+            cv2.circle(frame, (xy[0], xy[1]), r, (0, 0, 255), thickness=2)
         cv2.imshow('red', frame)
     capture.release()
     cv2.destroyAllWindows()
