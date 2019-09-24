@@ -6,33 +6,40 @@ import numpy as np
 import cv2
 import numpy as np
 
-def find_rect_of_target_color(image):
+def find_circle_of_target_color(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV_FULL)
     h = hsv[:, :, 0]
     s = hsv[:, :, 1]
     mask = np.zeros(h.shape, dtype=np.uint8)
     mask[(h < 190) & (h > 150) & (s > 128)] = 255
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    rects = []
+    circles = []
     for contour in contours:
         approx = cv2.convexHull(contour)
-        rect = cv2.boundingRect(approx)
-        rects.append(np.array(rect))
-    return rects
+        circle = cv2.boundingRect(approx)
+        circles.append(np.array(circle))
+    return circles
 
 
 VIDEOFILE = 'sample' #ビデオファイル名
 
-if __name__ == "__main__":
+
+def main():
     capture = cv2.VideoCapture(VIDEOFILE+'.mp4')
     while cv2.waitKey(30) < 0:
         _, frame = capture.read()
-        rects = find_rect_of_target_color(frame)
-        for rect in rects:
-            cv2.rectangle(frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]), (0, 0, 255), thickness=2)
+        circles = find_circle_of_target_color(frame)
+        print(circles)
+        for circle in circles:
+            print(tuple(circle[0:2]))
+            cv2.circle(frame, tuple(circle[0:2]), tuple(circle[0:2] + circle[2:4]), 20, (0, 0, 255), thickness=2)
         cv2.imshow('red', frame)
     capture.release()
     cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
 
 
 '''
