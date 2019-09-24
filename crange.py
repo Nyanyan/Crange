@@ -21,16 +21,18 @@ def find_rect_of_target_color(image):
     return rects
 
 
+VIDEOFILE = 'sample' #ビデオファイル名
+
 if __name__ == "__main__":
-  capture = cv2.VideoCapture()
-  while cv2.waitKey(30) < 0:
-    _, frame = capture.read()
-    rects = find_rect_of_target_color(frame)
-    for rect in rects:
-      cv2.rectangle(frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]), (0, 0, 255), thickness=2)
-    cv2.imshow('red', frame)
-  capture.release()
-  cv2.destroyAllWindows()
+    capture = cv2.VideoCapture(VIDEOFILE+'.mp4')
+    while cv2.waitKey(30) < 0:
+        _, frame = capture.read()
+        rects = find_rect_of_target_color(frame)
+        for rect in rects:
+            cv2.rectangle(frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]), (0, 0, 255), thickness=2)
+        cv2.imshow('red', frame)
+    capture.release()
+    cv2.destroyAllWindows()
 
 
 '''
