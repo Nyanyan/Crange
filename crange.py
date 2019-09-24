@@ -31,8 +31,11 @@ def main():
         circles = find_circle_of_target_color(frame)
         print(circles)
         for circle in circles:
-            print(tuple(circle[0:2]))
-            cv2.circle(frame, tuple(circle[0:2]), tuple(circle[0:2] + circle[2:4]), 20, (0, 0, 255), thickness=2)
+            xy = list((circle[0:2])+list(circle[0:2] + circle[2:4]))
+            for i in range(2):
+                xy[i] = xy[i] // 2
+            print(xy)
+            cv2.circle(frame, xy[0], xy[1], 20, (0, 0, 255), thickness=2)
         cv2.imshow('red', frame)
     capture.release()
     cv2.destroyAllWindows()
