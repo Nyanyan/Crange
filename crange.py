@@ -3,12 +3,16 @@ import cv2 #映像処理
 import numpy as np
 import math
 
-def find_circle_of_target_color(image):
+def find_circle_of_target_color(image, color):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV_FULL)
     h = hsv[:, :, 0]
     s = hsv[:, :, 1]
+    v = hsv[:, :, 2]
     mask = np.zeros(h.shape, dtype=np.uint8)
-    mask[(h < 190) & (h > 150) & (s > 128)] = 255
+    if color == 0:
+        mask[(s < 100) & (v > 230)] = 255
+    elif color == 1:
+        mask[(h > 40) & (h < 70) & (s > 50) & (v > 50)] = 255
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     circles = []
     for contour in contours:
@@ -25,8 +29,8 @@ def main():
     capture = cv2.VideoCapture(VIDEOFILE+'.mp4')
     while cv2.waitKey(30) < 0:
         _, frame = capture.read()
-        circles = find_circle_of_target_color(frame)
-        for circle in circles:
+        circles0 = find_circle_of_target_color(frame,0)
+        for circle in circles0:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
             for i in range(2):
                 xy[i] = xy[i] // 2
@@ -34,10 +38,9 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
-            print(xy,point,r)
             
-            cv2.circle(frame, (xy[0], xy[1]), r, (0, 0, 255), thickness=2)
-        cv2.imshow('red', frame)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
+        cv2.imshow('out', frame)
     capture.release()
     cv2.destroyAllWindows()
 
