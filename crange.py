@@ -29,7 +29,8 @@ def main():
     capture = cv2.VideoCapture(VIDEOFILE+'.mp4')
     while cv2.waitKey(30) < 0:
         _, frame = capture.read()
-        circles0 = find_circle_of_target_color(frame,0)
+        
+        circles0 = find_circle_of_target_color(frame,0) #白色
         for circle in circles0:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
             for i in range(2):
@@ -38,8 +39,20 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
-            
             cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
+        
+        circles1 = find_circle_of_target_color(frame,1) #黄色
+        for circle in circles1:
+            xy = list(circle[0:2] + circle[0:2] + circle[2:4])
+            for i in range(2):
+                xy[i] = xy[i] // 2
+            point = list(circle[0:2])
+            for i in range(2):
+                point[i] -= xy[i]
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
+        
+        
         cv2.imshow('out', frame)
     capture.release()
     cv2.destroyAllWindows()
