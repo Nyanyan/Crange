@@ -10,11 +10,17 @@ def find_circle_of_target_color(image, color):
     v = hsv[:, :, 2]
     mask = np.zeros(h.shape, dtype=np.uint8)
     if color == 0: #白
-        mask[(s < 100) & (v > 230)] = 255
+        mask[(s < 150) & (v > 200)] = 255
     elif color == 1: #黄
-        mask[(h > 40) & (h < 70) & (s > 50) & (v > 50)] = 255
+        mask[(h > 40) & (h < 80) & (s > 50) & (v > 50)] = 255
     elif color == 2: #緑
         mask[(h > 80) & (h < 100) & (s > 50) & (v > 50)] = 255
+    elif color == 3: #青
+        mask[(h > 150) & (h < 170) & (s > 50) & (v > 50)] = 255
+    elif color == 4: #赤
+        mask[(h > 180) & (h < 360) & (s > 50) & (v > 50)] = 255
+    elif color == 5: #橙
+        mask[(h > 5) & (h < 10) & (s > 50) & (v > 50)] = 255
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     circles = []
     for contour in contours:
@@ -40,8 +46,8 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 0, 0), thickness=-1)
         
         circles1 = find_circle_of_target_color(frame,1) #黄
         for circle in circles1:
@@ -51,8 +57,8 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 0), thickness=-1)
         
         circles2 = find_circle_of_target_color(frame,2) #緑
         for circle in circles2:
@@ -62,8 +68,41 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2))
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 0), thickness=-1)
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
+
+        circles3 = find_circle_of_target_color(frame,3) #青
+        for circle in circles3:
+            xy = list(circle[0:2] + circle[0:2] + circle[2:4])
+            for i in range(2):
+                xy[i] = xy[i] // 2
+            point = list(circle[0:2])
+            for i in range(2):
+                point[i] -= xy[i]
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
+        
+        circles4 = find_circle_of_target_color(frame,4) #赤
+        for circle in circles4:
+            xy = list(circle[0:2] + circle[0:2] + circle[2:4])
+            for i in range(2):
+                xy[i] = xy[i] // 2
+            point = list(circle[0:2])
+            for i in range(2):
+                point[i] -= xy[i]
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 0, 255), thickness=-1)
+
+        circles5 = find_circle_of_target_color(frame,5) #橙
+        for circle in circles5:
+            xy = list(circle[0:2] + circle[0:2] + circle[2:4])
+            for i in range(2):
+                xy[i] = xy[i] // 2
+            point = list(circle[0:2])
+            for i in range(2):
+                point[i] -= xy[i]
+            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
         
         
         cv2.imshow('out', frame)
