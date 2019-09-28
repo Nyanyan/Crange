@@ -42,6 +42,12 @@ def main():
         ret, frame = video.read()
         k = cv2.waitKey(rate)
         
+        # グレースケールに変換する。
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # 輪郭を抽出する。
+        contours, hierarchy = cv2.findContours(gray, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        '''
         circles0 = find_circle_of_target_color(frame,0) #白
         for circle in circles0:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
@@ -107,7 +113,7 @@ def main():
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
             cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
-            
+        '''
         cv2.imshow("Frame", frame)
         
         
