@@ -30,7 +30,7 @@ def find_circle_of_target_color(image, color):
     return circles
 
 
-VIDEOFILE = 'sample' #ビデオファイル名
+VIDEOFILE = 'sample1' #ビデオファイル名
 
 
 def main():
@@ -40,13 +40,38 @@ def main():
     print(allframe)
     for i in range(allframe):
         ret, frame = video.read()
-        k = cv2.waitKey(rate)
+        k = cv2.waitKey(rate*10)
         
-        # グレースケールに変換する。
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(gray,50,150,apertureSize = 3)
 
-        # 輪郭を抽出する。
-        contours, hierarchy = cv2.findContours(gray, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        lines = cv2.HoughLines(edges,1,np.pi/180,200)
+        for rho,theta in lines[0]:
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a*rho
+            y0 = b*rho
+            x1 = int(x0 + 1000*(-b))
+            y1 = int(y0 + 1000*(a))
+            x2 = int(x0 - 1000*(-b))
+            y2 = int(y0 - 1000*(a))
+
+            cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2)
+
+        '''
+        imgray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        ret,thresh = cv2.threshold(imgray,70,255,0)
+        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        for c in contours:
+            if cv2.contourArea(c) < 90:
+                continue
+            epsilon = 0.01 * cv2.arcLength(c, True)
+            approx = cv2.approxPolyDP(c, epsilon, True)
+            frame = cv2.drawContours(frame, c, -1, (0, 0, 255), 3)
+            frame = cv2.drawContours(frame, [approx], -1, (0, 255, 0), 3)
+        
+        #frame = cv2.drawContours(frame, approx, -1, (0,255,0), 3)
+        '''
         '''
         circles0 = find_circle_of_target_color(frame,0) #白
         for circle in circles0:
