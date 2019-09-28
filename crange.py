@@ -40,23 +40,45 @@ def main():
     print(allframe)
     for i in range(allframe):
         ret, frame = video.read()
-        k = cv2.waitKey(rate*10)
+        k = cv2.waitKey(rate)
         
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        edges = cv2.Canny(gray,50,150,apertureSize = 3)
+        gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(gray,100,255,apertureSize = 3)
 
-        lines = cv2.HoughLines(edges,1,np.pi/180,200)
-        for rho,theta in lines[0]:
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a*rho
-            y0 = b*rho
-            x1 = int(x0 + 1000*(-b))
-            y1 = int(y0 + 1000*(a))
-            x2 = int(x0 - 1000*(-b))
-            y2 = int(y0 - 1000*(a))
+        lines = cv2.HoughLines(edges,1,np.pi/180,10)
+        l = []
+        for i in range(50):
+            for rho,theta in lines[i]:
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*rho
+                y0 = b*rho
+                x1 = int(x0 + 1000*(-b))
+                y1 = int(y0 + 1000*(a))
+                x2 = int(x0 - 1000*(-b))
+                y2 = int(y0 - 1000*(a))
+                l.append([x1,y1,x2,y2])
 
-            cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2)
+                cv2.line(frame,(x1,y1),(x2,y2),(0,0,255),2)
+        xy = []
+        xtimesy = []
+        for i in range(len(l)):
+            for j in range(i+1,len(l)):
+                y2y1 = l[i][3] - l[i][1]
+                Y2Y1 = l[j][3] - l[j][1]
+                x2x1 = l[i][2] - l[i][0]
+                X2X1 = l[j][2] - l[j][0]
+                x1 = l[i][0]
+                y1 = l[i][1]
+                X1 = l[j][0]
+                Y1 = l[j][1]
+                x = (y2y1 / x2x1 * x1 - y1 - Y2Y1 / X2X1 * X1 + Y1) / (y2y1 / x2x1 - Y2Y1 / X2X1)
+                y = y2y1 / x2x1 * (x - x1) + y1
+                xy.append([x,y])
+                xtimesy.append(x*y)
+        
+        
+
 
         '''
         imgray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
