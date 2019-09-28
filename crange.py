@@ -34,10 +34,13 @@ VIDEOFILE = 'sample' #ビデオファイル名
 
 
 def main():
-    capture = cv2.VideoCapture(VIDEOFILE+'.mp4')
-    allframe = int(video.get(cv2.CAP_PROP_FRAME_COUNT)) #総フレーム数
+    video = cv2.VideoCapture(VIDEOFILE+'.mp4')
+    allframe = int(video.get(7)) #総フレーム数
+    rate = int(video.get(5)) #フレームレート
+    print(allframe)
     for i in range(allframe):
-        _, frame = capture.read()
+        ret, frame = video.read()
+        k = cv2.waitKey(rate)
         
         circles0 = find_circle_of_target_color(frame,0) #白
         for circle in circles0:
@@ -104,10 +107,11 @@ def main():
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
             cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
+            
+        cv2.imshow("Frame", frame)
         
         
-        cv2.imshow('out', frame)
-    capture.release()
+    #video.release()
     cv2.destroyAllWindows()
 
 
