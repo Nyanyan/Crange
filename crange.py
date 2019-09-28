@@ -30,7 +30,7 @@ def find_circle_of_target_color(image, color):
     return circles
 
 
-VIDEOFILE = 'sample1' #ビデオファイル名
+VIDEOFILE = 'sample' #ビデオファイル名
 
 
 def main():
@@ -75,13 +75,13 @@ def main():
                 if x2x1 * X2X1 != 0:
                     a = y2y1 / x2x1
                     b = Y2Y1 / X2X1
-                    if a - b != 0 and (1 + a * b) / math.sqrt((1+a**2) * (1+b**2)) < math.cos(45 * math.pi / 180):
+                    if a - b != 0 and (1 + a * b) / math.sqrt((1 + a ** 2) * (1 + b ** 2)) < math.cos(20 * math.pi / 180):
                         x = int((a * x1 - y1 - b * X1 + Y1) / (a - b))
                         y = int(a * (x - x1) + y1)
                         if x > 0 and y > 0 and x < width and y < height:
                             xy.append([x,y])
                             xtimesy.append([x*y,len(xtimesy)])
-                            cv2.circle(frame,(x,y),2,color=(255,0,0),thickness=-1)
+                            #cv2.circle(frame,(x,y),2,color=(255,0,0),thickness=-1)
         xtimesy.sort()
         a = []
         for i in range(len(xtimesy)):
@@ -93,26 +93,28 @@ def main():
             ysort.append(xy[a[i]][1])
         mean0 = []
         mean1 = []
-        additionx = int(np.std(xsort) * 0.8)
-        additiony = int(np.std(ysort) * 0.8)
+        additionx = int(np.std(xsort))
+        additiony = int(np.std(ysort))
         tmp0 = 0
         tmp1 = 0
-        for i in range(len(xsort) // 4):
+        for i in range(len(xsort) // 7, 2 * len(xsort) // 7):
             tmp0 += xsort[i]
             tmp1 += ysort[i]
-        mean0 = [tmp0 // (len(xsort) // 4) - additionx,tmp1 // (len(xsort) // 4) - additiony]
+            cv2.circle(frame,(xsort[i],ysort[i]),2,color=(255,0,0),thickness=-1)
+        mean0 = [tmp0 // (2 * len(xsort) // 7 - len(xsort) // 7) - additionx,tmp1 // (2 * len(xsort) // 7 - len(xsort) // 7) - additiony]
 
         tmp0 = 0
         tmp1 = 0
-        for i in range(3 * len(xsort) // 4, len(xsort)):
+        for i in range(3 * len(xsort) // 5, 4 * len(xsort) // 5):
             tmp0 += xsort[i]
             tmp1 += ysort[i]
-        mean1 = [tmp0 // (len(xsort) - 3 * len(xsort) // 4) + additionx,tmp1 // (len(xsort) - 3 * len(xsort) // 4) + additiony]
+            cv2.circle(frame,(xsort[i],ysort[i]),2,color=(0,255,0),thickness=-1)
+        mean1 = [tmp0 // (4 * len(xsort) // 5 - 3 * len(xsort) // 5) + additionx,tmp1 // (4 * len(xsort) // 5 - 3 * len(xsort) // 5) + additiony]
 
         #print(mean0,mean1)
         cv2.rectangle(frame,(mean0[0],mean0[1]),(mean1[0],mean1[1]), color=(0, 0, 255), thickness=5)
 
-        
+        '''
         circles0 = find_circle_of_target_color(frame,0) #白
         for circle in circles0:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
@@ -122,7 +124,7 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9:
+            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9 and r > width / 20:
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 0, 0), thickness=-1)
         
         circles1 = find_circle_of_target_color(frame,1) #黄
@@ -134,7 +136,7 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9:
+            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9 and r > width / 20:
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 0), thickness=-1)
         
         circles2 = find_circle_of_target_color(frame,2) #緑
@@ -146,7 +148,7 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9:
+            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9 and r > width / 20:
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
 
         circles3 = find_circle_of_target_color(frame,3) #青
@@ -158,7 +160,7 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9:
+            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9 and r > width / 20:
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
         
         circles4 = find_circle_of_target_color(frame,4) #赤
@@ -170,7 +172,7 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9:
+            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9 and r > width / 20:
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 0, 255), thickness=-1)
 
         circles5 = find_circle_of_target_color(frame,5) #橙
@@ -182,11 +184,11 @@ def main():
             for i in range(2):
                 point[i] -= xy[i]
             r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9:
+            if xy[0] > mean0[0] and xy[1] > mean0[1] and xy[0] < mean1[0] and xy[1] < mean1[1] and r < width / 9 and r > width / 20:
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
-        
+        '''
         cv2.imshow("Frame", frame)
-        k = cv2.waitKey(rate)
+        k = cv2.waitKey(rate*10)
         
         
     #video.release()
