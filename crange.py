@@ -81,7 +81,6 @@ def main():
                             xtimesy.append([x*y,len(xtimesy)])
                             #cv2.circle(frame,(x,y),5,color=(255,0,0),thickness=-1)
         xtimesy.sort()
-        #print(xtimesy)
         a = []
         for i in range(len(xtimesy)):
             a.append(xtimesy[i][1])
