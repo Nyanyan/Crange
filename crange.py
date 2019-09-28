@@ -30,7 +30,7 @@ def find_circle_of_target_color(image, color):
     return circles
 
 
-VIDEOFILE = 'sample1' #ビデオファイル名
+VIDEOFILE = 'sample' #ビデオファイル名
 
 
 def main():
@@ -38,16 +38,16 @@ def main():
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
     print(allframe)
-    for i in range(allframe):
+    for f in range(allframe):
         ret, frame = video.read()
-        k = cv2.waitKey(rate)
+        height, width, channels = frame.shape[:3]
         
         gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
         edges = cv2.Canny(gray,100,255,apertureSize = 3)
 
         lines = cv2.HoughLines(edges,1,np.pi/180,10)
         l = []
-        for i in range(50):
+        for i in range(100):
             for rho,theta in lines[i]:
                 a = np.cos(theta)
                 b = np.sin(theta)
@@ -59,7 +59,7 @@ def main():
                 y2 = int(y0 - 1000*(a))
                 l.append([x1,y1,x2,y2])
 
-                cv2.line(frame,(x1,y1),(x2,y2),(0,0,255),2)
+                #cv2.line(frame,(x1,y1),(x2,y2),(0,0,255),2)
         xy = []
         xtimesy = []
         for i in range(len(l)):
@@ -72,12 +72,44 @@ def main():
                 y1 = l[i][1]
                 X1 = l[j][0]
                 Y1 = l[j][1]
-                x = (y2y1 / x2x1 * x1 - y1 - Y2Y1 / X2X1 * X1 + Y1) / (y2y1 / x2x1 - Y2Y1 / X2X1)
-                y = y2y1 / x2x1 * (x - x1) + y1
-                xy.append([x,y])
-                xtimesy.append(x*y)
-        
-        
+                if x2x1 * X2X1 != 0:
+                    if y2y1 / x2x1 - Y2Y1 / X2X1 != 0:
+                        x = int((y2y1 / x2x1 * x1 - y1 - Y2Y1 / X2X1 * X1 + Y1) / (y2y1 / x2x1 - Y2Y1 / X2X1))
+                        y = int(y2y1 / x2x1 * (x - x1) + y1)
+                        if x > 0 and y > 0 and x < width and y < height:
+                            xy.append([x,y])
+                            xtimesy.append([x*y,len(xtimesy)])
+                            cv2.circle(frame,(x,y),5,color=(255,0,0),thickness=-1)
+        xtimesy.sort()
+        #print(xtimesy)
+        a = []
+        for i in range(len(xtimesy)):
+            a.append(xtimesy[i][1])
+        xsort = []
+        ysort = []
+        for i in range(len(xy)):
+            xsort.append(xy[a[i]][0])
+            ysort.append(xy[a[i]][1])
+        mean0 = []
+        mean1 = []
+        additionx = int(np.std(xsort))
+        additiony = int(np.std(ysort))
+        tmp0 = 0
+        tmp1 = 0
+        for i in range(len(xsort) // 4):
+            tmp0 += xsort[i]
+            tmp1 += ysort[i]
+        mean0 = [tmp0 // (len(xsort) // 4) - additionx,tmp1 // (len(xsort) // 4) - additiony]
+
+        tmp0 = 0
+        tmp1 = 0
+        for i in range(3 * len(xsort) // 4, len(xsort)):
+            tmp0 += xsort[i]
+            tmp1 += ysort[i]
+        mean1 = [tmp0 // (len(xsort) - 3 * len(xsort) // 4) + additionx,tmp1 // (len(xsort) - 3 * len(xsort) // 4) + additiony]
+
+        #print(mean0,mean1)
+        cv2.rectangle(frame,(mean0[0],mean0[1]),(mean1[0],mean1[1]), color=(0, 0, 255), thickness=5)
 
 
         '''
@@ -162,6 +194,7 @@ def main():
             cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
         '''
         cv2.imshow("Frame", frame)
+        k = cv2.waitKey(rate)
         
         
     #video.release()
