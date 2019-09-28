@@ -111,22 +111,7 @@ def main():
         #print(mean0,mean1)
         cv2.rectangle(frame,(mean0[0],mean0[1]),(mean1[0],mean1[1]), color=(0, 0, 255), thickness=5)
 
-
-        '''
-        imgray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-        ret,thresh = cv2.threshold(imgray,70,255,0)
-        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        for c in contours:
-            if cv2.contourArea(c) < 90:
-                continue
-            epsilon = 0.01 * cv2.arcLength(c, True)
-            approx = cv2.approxPolyDP(c, epsilon, True)
-            frame = cv2.drawContours(frame, c, -1, (0, 0, 255), 3)
-            frame = cv2.drawContours(frame, [approx], -1, (0, 255, 0), 3)
         
-        #frame = cv2.drawContours(frame, approx, -1, (0,255,0), 3)
-        '''
-        '''
         circles0 = find_circle_of_target_color(frame,0) #白
         for circle in circles0:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
@@ -135,8 +120,9 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 0, 0), thickness=-1)
+            if point[0] > mean0[0] and point[1] > mean0[1] and point[0] < mean1[0] and point[1] < mean1[1]:
+                r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+                cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 0, 0), thickness=-1)
         
         circles1 = find_circle_of_target_color(frame,1) #黄
         for circle in circles1:
@@ -146,8 +132,9 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 0), thickness=-1)
+            if point[0] > mean0[0] and point[1] > mean0[1] and point[0] < mean1[0] and point[1] < mean1[1]:
+                r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+                cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 0), thickness=-1)
         
         circles2 = find_circle_of_target_color(frame,2) #緑
         for circle in circles2:
@@ -157,8 +144,9 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
+            if point[0] > mean0[0] and point[1] > mean0[1] and point[0] < mean1[0] and point[1] < mean1[1]:
+                r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+                cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 255, 255), thickness=-1)
 
         circles3 = find_circle_of_target_color(frame,3) #青
         for circle in circles3:
@@ -168,8 +156,9 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
+            if point[0] > mean0[0] and point[1] > mean0[1] and point[0] < mean1[0] and point[1] < mean1[1]:
+                r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+                cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
         
         circles4 = find_circle_of_target_color(frame,4) #赤
         for circle in circles4:
@@ -179,8 +168,9 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 0, 255), thickness=-1)
+            if point[0] > mean0[0] and point[1] > mean0[1] and point[0] < mean1[0] and point[1] < mean1[1]:
+                r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+                cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 0, 255), thickness=-1)
 
         circles5 = find_circle_of_target_color(frame,5) #橙
         for circle in circles5:
@@ -190,9 +180,10 @@ def main():
             point = list(circle[0:2])
             for i in range(2):
                 point[i] -= xy[i]
-            r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
-            cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
-        '''
+            if point[0] > mean0[0] and point[1] > mean0[1] and point[0] < mean1[0] and point[1] < mean1[1]:
+                r = int(math.sqrt(point[0] ** 2 + point[1] ** 2) * 0.7)
+                cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
+        
         cv2.imshow("Frame", frame)
         k = cv2.waitKey(rate)
         
