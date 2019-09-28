@@ -35,7 +35,8 @@ VIDEOFILE = 'sample' #ビデオファイル名
 
 def main():
     capture = cv2.VideoCapture(VIDEOFILE+'.mp4')
-    while cv2.waitKey(30) < 0:
+    allframe = int(video.get(cv2.CAP_PROP_FRAME_COUNT)) #総フレーム数
+    for i in range(allframe):
         _, frame = capture.read()
         
         circles0 = find_circle_of_target_color(frame,0) #白
