@@ -73,13 +73,15 @@ def main():
                 X1 = l[j][0]
                 Y1 = l[j][1]
                 if x2x1 * X2X1 != 0:
-                    if y2y1 / x2x1 - Y2Y1 / X2X1 != 0:
-                        x = int((y2y1 / x2x1 * x1 - y1 - Y2Y1 / X2X1 * X1 + Y1) / (y2y1 / x2x1 - Y2Y1 / X2X1))
-                        y = int(y2y1 / x2x1 * (x - x1) + y1)
+                    a = y2y1 / x2x1
+                    b = Y2Y1 / X2X1
+                    if a - b != 0 and (1 + a * b) / math.sqrt((1+a**2) * (1+b**2)) < math.cos(45 * math.pi / 180):
+                        x = int((a * x1 - y1 - b * X1 + Y1) / (a - b))
+                        y = int(a * (x - x1) + y1)
                         if x > 0 and y > 0 and x < width and y < height:
                             xy.append([x,y])
                             xtimesy.append([x*y,len(xtimesy)])
-                            #cv2.circle(frame,(x,y),5,color=(255,0,0),thickness=-1)
+                            cv2.circle(frame,(x,y),2,color=(255,0,0),thickness=-1)
         xtimesy.sort()
         a = []
         for i in range(len(xtimesy)):
@@ -108,7 +110,7 @@ def main():
         mean1 = [tmp0 // (len(xsort) - 3 * len(xsort) // 4) + additionx,tmp1 // (len(xsort) - 3 * len(xsort) // 4) + additiony]
 
         #print(mean0,mean1)
-        #cv2.rectangle(frame,(mean0[0],mean0[1]),(mean1[0],mean1[1]), color=(0, 0, 255), thickness=5)
+        cv2.rectangle(frame,(mean0[0],mean0[1]),(mean1[0],mean1[1]), color=(0, 0, 255), thickness=5)
 
         
         circles0 = find_circle_of_target_color(frame,0) #白
