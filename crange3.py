@@ -2,29 +2,7 @@
 import cv2 #映像処理
 import numpy as np
 import math
-
-def find_circle_of_target_color(image, color):
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV_FULL)
-    h = hsv[:, :, 0]
-    s = hsv[:, :, 1]
-    v = hsv[:, :, 2]
-    mask = np.zeros(h.shape, dtype=np.uint8)
-    if color == 0: #白
-        mask[(s < 150) & (v > 150)] = 255
-    elif color == 1: #黄
-        mask[(h > 40) & (h < 70) & (s > 50) & (v > 50)] = 255
-    elif color == 2: #緑
-        mask[(h > 70) & (h < 140) & (s > 50) & (v > 50)] = 255
-    elif color == 3: #青
-        mask[(h > 150) & (h < 170) & (s > 50) & (v > 50)] = 255
-    elif color == 4: #赤
-        mask[(h > 250) & (h < 270) & (s > 50) & (v > 50)] = 255
-    elif color == 5: #橙
-        mask[(((h > 0) & (h < 40)) | ((h > 200) & (h < 360))) & (s > 50) & (v > 50)] = 255
-    hsv_min = np.array([160,100,50])
-    hsv_max = np.array([180,255,255])
-    mask = cv2.inRange(hsv, hsv_min, hsv_max)
-    return mask
+import copy
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -33,17 +11,23 @@ def color_detect(img,color):
     a = []
     b = []
     if color == 'white':
-        a = [0,150,150]
-        b = [360,255,255]
+        a = [0,0,220]
+        b = [180,30,255]
     elif color == 'yellow':
-        a = [40,50,50]
-        b = [70,255,255]
+        a = [20,50,50]
+        b = [50,255,255]
     elif color == 'green':
         a = [50,50,50]
         b = [70,255,255]
     elif color == 'blue':
         a = [70,50,50]
         b = [140,255,255]
+    elif color == 'red':
+        a = [170,50,50]
+        b = [180,255,255]
+    elif color == 'orange':
+        a = [10,50,50]
+        b = [30,255,255]
     hsv_min = np.array(a)
     hsv_max = np.array(b)
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
@@ -51,8 +35,19 @@ def color_detect(img,color):
 
 def changecolor(height,width,frame,img_masked, color):
     a = ()
-    if color == 'red':
+    if color == 'white':
+        a = (255,255,255)
+    elif color == 'yellow':
+        a = (0,255,255)
+    elif color == 'green':
+        a = (0,255,0)
+    elif color == 'blue':
+        a = (255,0,0)
+    elif color == 'red':
         a = (0,0,255)
+    elif color == 'orange':
+        a = (0,100,255)
+    
     dst = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
     for y in range(0, height):
         for x in range(0, width):
@@ -62,7 +57,7 @@ def changecolor(height,width,frame,img_masked, color):
                 dst[y][x] = a
     return dst
 
-VIDEOFILE = 'sample' #ビデオファイル名
+VIDEOFILE = 'sample2' #ビデオファイル名
 
 
 def main():
@@ -74,17 +69,16 @@ def main():
         ret, frame = video.read()
         height, width, channels = frame.shape[:3]
 
-        
-        mask = color_detect(frame,'green')
-        #cv2.imshow("Mask", mask)
-        #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
-        img_masked = cv2.bitwise_and(frame, frame, mask=mask)
-
-        color = [0, 0, 255]
-        black = [0, 0, 0]
-        img_masked[np.where((img_masked != black).all(axis=2))] = color
-        dst = changecolor(height,width,frame,img_masked,'red')
-        
+        colorarray0 = ['white','yellow','green','blue','red','orange']
+        colorarray1 = ['blue','green','white','yelow','red','orange']
+        dst = copy.copy(frame)
+        for i in range(len(colorarray0)):
+            mask = color_detect(frame,colorarray0[i])
+            img_masked = cv2.bitwise_and(frame, frame, mask=mask)
+            white = [255, 255, 255]
+            black = [0, 0, 0]
+            img_masked[np.where((img_masked != black).all(axis=2))] = white
+            dst = changecolor(height,width,dst,img_masked,colorarray1[i])
         cv2.imshow('img',dst)
 
         #cv2.imshow("Show MASK Image", img_masked)
