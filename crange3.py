@@ -49,14 +49,17 @@ def color_detect(img,color):
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
     return mask
 
-def changecolor(height,width,frame,img_masked):
+def changecolor(height,width,frame,img_masked, color):
+    a = ()
+    if color == 'red':
+        a = (0,0,255)
     dst = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
     for y in range(0, height):
         for x in range(0, width):
             if (img_masked[y][x] == 0).all(): #黒以外
                 dst[y][x] = frame[y][x] 
             else:
-                dst[y][x] = (0,0,255)
+                dst[y][x] = a
     return dst
 
 VIDEOFILE = 'sample' #ビデオファイル名
@@ -76,18 +79,11 @@ def main():
         #cv2.imshow("Mask", mask)
         #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
         img_masked = cv2.bitwise_and(frame, frame, mask=mask)
-        '''
-        for x in range(height):
-            for y in range(width):
-                b, g, r = img_masked[x, y]
-                if (b, g, r) == (255, 255, 255):
-                    continue
-                img_masked[x, y] = 0, 0, g
-        '''
+
         color = [0, 0, 255]
         black = [0, 0, 0]
         img_masked[np.where((img_masked != black).all(axis=2))] = color
-        dst = changecolor(height,width,frame,img_masked)
+        dst = changecolor(height,width,frame,img_masked,'red')
         
         cv2.imshow('img',dst)
 
