@@ -34,23 +34,23 @@ def color_detect(img,color):
     return mask
 
 def changecolor(height,width,dst,img_masked, color):
-    a = ()
+    a = []
     if color == 'white':
-        a = (255,255,255)
+        a = [255,255,255]
     elif color == 'yellow':
-        a = (0,255,255)
+        a = [0,255,255]
     elif color == 'green':
-        a = (0,255,0)
+        a = [0,255,0]
     elif color == 'blue':
-        a = (255,0,0)
+        a = [255,0,0]
     elif color == 'red':
-        a = (0,0,255)
+        a = [0,0,255]
     elif color == 'orange':
-        a = (0,100,255)
+        a = [0,100,255]
     out = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
     for y in range(0, height):
         for x in range(0, width):
-            if (img_masked[y][x] == 0).all(): #黒以外
+            if (img_masked[y][x] == 0): #黒
                 out[y][x] = dst[y][x] 
             else:
                 out[y][x] = a
