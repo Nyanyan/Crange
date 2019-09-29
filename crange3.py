@@ -158,10 +158,18 @@ def main():
         colorarray1 = ['blue','green','white','yellow']
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
-            dst = changecolor(height,width,dst,mask,colorarray1[i])
-        #writer.write(dst)
             
-        cv2.imshow('Frame',dst)
+            for j in range(width):
+                for k in range(height):
+                    if j < int(mean0[0]) or j > int(mean1[0]) or k < int(mean0[1]) or int(k > mean1[1]):
+                        print(a)
+                        mask[k][j] = 0
+            dst = changecolor(height,width,dst,mask,colorarray1[i])
+            if i == 0:
+                cv2.imshow('Frame',mask)
+                #print(mask[30])
+        #writer.write(dst)
+        cv2.imshow('Frames',dst)
         k = cv2.waitKey(rate)
         
         print(allframe,f)
