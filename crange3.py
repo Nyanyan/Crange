@@ -11,8 +11,8 @@ def color_detect(img,color):
     a = []
     b = []
     if color == 'white':
-        a = [0,0,220]
-        b = [180,30,255]
+        a = [0,0,200]
+        b = [180,50,255]
     elif color == 'yellow':
         a = [20,50,50]
         b = [50,255,255]
@@ -23,11 +23,11 @@ def color_detect(img,color):
         a = [70,50,50]
         b = [140,255,255]
     elif color == 'red':
-        a = [170,50,50]
+        a = [160,50,50]
         b = [180,255,255]
     elif color == 'orange':
-        a = [10,50,50]
-        b = [30,255,255]
+        a = [0,50,50]
+        b = [20,255,255]
     hsv_min = np.array(a)
     hsv_max = np.array(b)
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
@@ -72,8 +72,8 @@ def main():
     for f in range(allframe):
         ret, frame = video.read()
 
-        colorarray0 = ['white','yellow','green','blue','red','orange']
-        colorarray1 = ['blue','green','white','yellow','red','orange']
+        colorarray0 = ['white','yellow','green','blue']
+        colorarray1 = ['blue','green','white','yellow']
         dst = copy.copy(frame)
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
@@ -90,6 +90,7 @@ def main():
         #cv2.imwrite(frame, img_masked)
         #k = cv2.waitKey(rate)
         writer.write(dst)
+        print(allframe,f)
         
         
     #video.release()
