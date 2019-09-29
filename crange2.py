@@ -21,13 +21,10 @@ def find_circle_of_target_color(image, color):
         mask[(h > 250) & (h < 270) & (s > 50) & (v > 50)] = 255
     elif color == 5: #橙
         mask[(((h > 0) & (h < 40)) | ((h > 200) & (h < 360))) & (s > 50) & (v > 50)] = 255
-    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    circles = []
-    for contour in contours:
-        approx = cv2.convexHull(contour)
-        circle = cv2.boundingRect(approx)
-        circles.append(np.array(circle))
-    return circles
+    hsv_min = np.array([160,100,50])
+    hsv_max = np.array([180,255,255])
+    mask = cv2.inRange(hsv, hsv_min, hsv_max)
+    return mask
 
 
 VIDEOFILE = 'sample1' #ビデオファイル名
@@ -125,7 +122,9 @@ def main():
         print(mean0,mean1)
         cv2.rectangle(frame,(int(mean0[0]), int(mean0[1])),(int(mean1[0]), int(mean1[1])), color=(0, 0, 255), thickness=5)
 
+
         
+        '''
         circles0 = find_circle_of_target_color(frame,0) #白
         for circle in circles0:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
@@ -181,7 +180,7 @@ def main():
                 #cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 255, 255), thickness=-1)
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(255, 0, 0), thickness=-1)
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 0, 0), thickness=4)
-        '''
+        
         circles4 = find_circle_of_target_color(frame,4) #赤
         for circle in circles4:
             xy = list(circle[0:2] + circle[0:2] + circle[2:4])
