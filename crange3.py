@@ -68,7 +68,6 @@ def main():
     writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
-    #print(allframe)
     for f in range(allframe):
         ret, frame = video.read()
 
