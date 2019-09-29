@@ -52,33 +52,27 @@ def main():
         #cv2.imshow("Mask", mask)
         #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
         img_masked = cv2.bitwise_and(frame, frame, mask=mask)
-        
+        '''
         for x in range(height):
             for y in range(width):
                 b, g, r = img_masked[x, y]
                 if (b, g, r) == (255, 255, 255):
                     continue
                 img_masked[x, y] = 0, 0, g
-        
         '''
-        mask1 = np.zeros(img_masked.shape[:2],np.uint8)
-
-        bgdModel = np.zeros((1,65),np.float64)
-        fgdModel = np.zeros((1,65),np.float64)
-
-        rect = (1,1,665,344)
-        cv2.grabCut(img_masked,mask1,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
-
-        mask2 = np.where((mask1==2)|(mask1==0),0,1).astype('uint8')
-        img_masked = img_masked*mask2[:,:,np.newaxis]
-        '''
-        '''
-        green = [0, 0, 255]
+        color = [0, 0, 255]
         black = [0, 0, 0]
-        img_masked[np.where((img_masked != black).all(axis=2))] = green
-        '''
-        cv2.imshow('img',frame+img_masked)
+        img_masked[np.where((img_masked != black).all(axis=2))] = color
         
+        dst = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
+        for y in range(0, height):
+            for x in range(0, width):
+                if (img_masked[y][x] == 0).all(): # 「青・緑・赤」すべてが241以上なら
+                    dst[y][x] = frame[y][x] # 隠れていない部分なので、「lena.jpg」の画素を代入
+                else:
+                    dst[y][x] = (0,0,255) # 隠れている部分なので、黒にする
+        cv2.imshow('img',dst)
+
         #cv2.imshow("Show MASK Image", img_masked)
         
         #cv2.imshow("Show MASK Image", img_masked)
