@@ -30,15 +30,10 @@ def color_detect(img):
     # HSV色空間に変換
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # 色のHSVの値域
-    hsv_min = np.array([160,100,50])
-    hsv_max = np.array([180,255,255])
+    hsv_min = np.array([30,100,50])
+    hsv_max = np.array([80,255,255])
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
     return mask
-
-def clip_image(x, y, img_masked, frame):
-    h, w, _ = img_masked.shape
-    frame[y:y+h, x:x+w] = img_masked
-
 
 VIDEOFILE = 'sample1' #ビデオファイル名
 
@@ -51,111 +46,44 @@ def main():
     for f in range(allframe):
         ret, frame = video.read()
         height, width, channels = frame.shape[:3]
-        #print(width,height)
-        '''
-        gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-        edges = cv2.Canny(gray,100,255,apertureSize = 3)
 
-        lines = cv2.HoughLines(edges,1,np.pi/180,10)
-        l = []
-        for i in range(100):
-            for rho,theta in lines[i]:
-                a = np.cos(theta)
-                b = np.sin(theta)
-                x0 = a*rho
-                y0 = b*rho
-                x1 = int(x0 + 1000*(-b))
-                y1 = int(y0 + 1000*(a))
-                x2 = int(x0 - 1000*(-b))
-                y2 = int(y0 - 1000*(a))
-                l.append([x1,y1,x2,y2])
-
-                #cv2.line(frame,(x1,y1),(x2,y2),(0,0,255),2)
-        xy = []
-        xtimesy = []
-        for i in range(len(l)):
-            for j in range(i+1,len(l)):
-                y2y1 = l[i][3] - l[i][1]
-                Y2Y1 = l[j][3] - l[j][1]
-                x2x1 = l[i][2] - l[i][0]
-                X2X1 = l[j][2] - l[j][0]
-                x1 = l[i][0]
-                y1 = l[i][1]
-                X1 = l[j][0]
-                Y1 = l[j][1]
-                if x2x1 * X2X1 != 0:
-                    a = y2y1 / x2x1
-                    b = Y2Y1 / X2X1
-                    if a - b != 0 and (1 + a * b) / math.sqrt((1 + a ** 2) * (1 + b ** 2)) < math.cos(10 * math.pi / 180):
-                        x = int((a * x1 - y1 - b * X1 + Y1) / (a - b))
-                        y = int(a * (x - x1) + y1)
-                        if x > 0 and y > 0 and x < width and y < height:
-                            xy.append([x,y])
-                            xtimesy.append([x*y,len(xtimesy)])
-                            #cv2.circle(frame,(x,y),2,color=(255,0,0),thickness=-1)
-        xtimesy.sort()
-        a = []
-        for i in range(len(xtimesy)):
-            a.append(xtimesy[i][1])
-        xsort = []
-        ysort = []
-        for i in range(len(xy)):
-            xsort.append(xy[a[i]][0])
-            ysort.append(xy[a[i]][1])
-        mean0 = []
-        mean1 = []
-        additionx = int(np.std(xsort))
-        additiony = int(np.std(ysort))
-        tmp0 = 0
-        tmp1 = 0
-        weightsum = 0
-        for i in range(2 * len(xsort) // 7):
-            weight = 1
-            if i > 0:
-                weight = 1 / (((xsort[i-1]-xsort[i]) / 5) ** 2 + ((ysort[i-1]-ysort[i]) / 5) ** 2 + 0.1)
-            tmp0 += int(xsort[i] * weight)
-            tmp1 += int(ysort[i] * weight)
-            weightsum += weight
-            #print(weight)
-            #cv2.circle(frame,(xsort[i],ysort[i]),int(weight),color=(255,0,0),thickness=2)
-        mean0 = [max(tmp0 // weightsum - additionx, 0), max(tmp1 // weightsum - additiony,0)]
-
-        tmp0 = 0
-        tmp1 = 0
-        weightsum = 0
-        for i in range(3 * len(xsort) // 5, 5 * len(xsort) // 5):
-            weight = 1 / (((xsort[i-1]-xsort[i]) / 5) ** 2 + ((ysort[i-1]-ysort[i]) / 5) ** 2 + 0.1)
-            tmp0 += int(xsort[i] * weight)
-            tmp1 += int(ysort[i] * weight)
-            weightsum += weight
-            #print(weight)
-            #cv2.circle(frame,(xsort[i],ysort[i]),int(weight),color=(0,255,0),thickness=2)
-        mean1 = [min(tmp0 // weightsum + additionx, width), min(tmp1 // weightsum + additiony, height)]
-
-        #print(mean0,mean1)
-        cv2.rectangle(frame,(int(mean0[0]), int(mean0[1])),(int(mean1[0]), int(mean1[1])), color=(0, 0, 255), thickness=5)
-        '''
-
-        #cv2.fillPoly(frame, pts=find_circle_of_target_color(frame,0), color=(0,0,255))
-        #contours = np.array( [ [50,50], [50,150], [150, 150], [150,50] ] )
-        #cv2.fillPoly(frame, [find_circle_of_target_color(frame,0)], color=(0,255,0))
+        
         mask = color_detect(frame)
         #cv2.imshow("Mask", mask)
         #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
         img_masked = cv2.bitwise_and(frame, frame, mask=mask)
-
+        
         for x in range(height):
             for y in range(width):
                 b, g, r = img_masked[x, y]
                 if (b, g, r) == (255, 255, 255):
                     continue
-                img_masked[x, y] = b, r, 0
+                img_masked[x, y] = 0, 0, g
+        
+        '''
+        mask1 = np.zeros(img_masked.shape[:2],np.uint8)
 
-        cv2.imshow("Show MASK Image", img_masked)
+        bgdModel = np.zeros((1,65),np.float64)
+        fgdModel = np.zeros((1,65),np.float64)
+
+        rect = (1,1,665,344)
+        cv2.grabCut(img_masked,mask1,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
+
+        mask2 = np.where((mask1==2)|(mask1==0),0,1).astype('uint8')
+        img_masked = img_masked*mask2[:,:,np.newaxis]
+        '''
+        '''
+        green = [0, 0, 255]
+        black = [0, 0, 0]
+        img_masked[np.where((img_masked != black).all(axis=2))] = green
+        '''
+        cv2.imshow('img',frame+img_masked)
+        
+        #cv2.imshow("Show MASK Image", img_masked)
         
         #cv2.imshow("Show MASK Image", img_masked)
         #cv2.imwrite(frame, img_masked)
-        
+        '''
         img2gray = cv2.cvtColor(img_masked,cv2.COLOR_BGR2GRAY)
         img2gray.shape
         mask_inv = cv2.bitwise_not(img2gray)
@@ -168,22 +96,6 @@ def main():
         #final_roi = cv2.bitwise_or(frame,fg)
         
         clip_image(0, 0,fg,frame)
-        '''
-        gray = cv2.cvtColor(img_masked, cv2.COLOR_BGR2GRAY)
-        # 2値化する。
-        _, binary = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
-        contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        m = np.zeros_like(img_masked)
-        cv2.drawContours(m, contours, -1, color=(255, 255, 255), thickness=-1)
-        h, w = img_masked.shape[:2]  # 前景画像の大きさ
-        x, y = 0, 0  # 背景画像の座標上で前景画像を貼り付ける位置
-        roi = frame[y:y + h, x:x + w, :]
-        result = np.where(mask==255, frame, roi)
-        #blended = cv2.addWeighted(src1=frame,alpha=0.5,src2=img_masked,beta=0.5,gamma=0)
-        cv2.imshow("Show MASK Image", result)
-        #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
-        #cv2.FillConvexPoly(frame, mask, (0,255,0), lineType=8, shift=0)
-        #print(mask)
         '''
         '''
         circles0 = find_circle_of_target_color(frame,0) #白
@@ -268,7 +180,7 @@ def main():
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 150, 255), thickness=-1)
                 cv2.circle(frame, (xy[0], xy[1]), r, color=(0, 0, 0), thickness=4)
         '''
-        cv2.imshow("Frame", frame)
+        #cv2.imshow("Frame", frame)
         k = cv2.waitKey(rate)
         
         
