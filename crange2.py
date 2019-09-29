@@ -26,6 +26,15 @@ def find_circle_of_target_color(image, color):
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
     return mask
 
+def color_detect(img):
+    # HSV色空間に変換
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # 色のHSVの値域
+    hsv_min = np.array([160,100,50])
+    hsv_max = np.array([180,255,255])
+    mask = cv2.inRange(hsv, hsv_min, hsv_max)
+    return mask
+
 
 VIDEOFILE = 'sample1' #ビデオファイル名
 
@@ -119,10 +128,19 @@ def main():
             #cv2.circle(frame,(xsort[i],ysort[i]),int(weight),color=(0,255,0),thickness=2)
         mean1 = [min(tmp0 // weightsum + additionx, width), min(tmp1 // weightsum + additiony, height)]
 
-        print(mean0,mean1)
+        #print(mean0,mean1)
         cv2.rectangle(frame,(int(mean0[0]), int(mean0[1])),(int(mean1[0]), int(mean1[1])), color=(0, 0, 255), thickness=5)
 
-
+        #cv2.fillPoly(frame, pts=find_circle_of_target_color(frame,0), color=(0,0,255))
+        #contours = np.array( [ [50,50], [50,150], [150, 150], [150,50] ] )
+        #cv2.fillPoly(frame, [find_circle_of_target_color(frame,0)], color=(0,255,0))
+        mask = color_detect(frame)
+        cv2.imshow("Mask", mask)
+        mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
+        cv2.bitwise_and((0,255,0), (255,0,0), mask=mask)
+        #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
+        #cv2.FillConvexPoly(frame, mask, (0,255,0), lineType=8, shift=0)
+        print(mask)
         
         '''
         circles0 = find_circle_of_target_color(frame,0) #白
