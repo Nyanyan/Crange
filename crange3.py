@@ -56,18 +56,21 @@ def changecolor(height,width,dst,img_masked, color):
                 out[y][x] = a
     return out
 
-VIDEOFILE = 'sample2' #ビデオファイル名
-
+VIDEOFILE = 'sample3' #ビデオファイル名
+fps = 30
 
 def main():
-    videoout = []
     video = cv2.VideoCapture(VIDEOFILE+'.mp4')
+    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+    fps = int(video.get(cv2.CAP_PROP_FPS))
+    fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+    writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
     #print(allframe)
     for f in range(allframe):
         ret, frame = video.read()
-        height, width, channels = frame.shape[:3]
 
         colorarray0 = ['white','yellow','green','blue','red','orange']
         colorarray1 = ['blue','green','white','yellow','red','orange']
@@ -79,13 +82,14 @@ def main():
             black = [0, 0, 0]
             img_masked[np.where((img_masked != black).all(axis=2))] = white
             dst = changecolor(height,width,dst,img_masked,colorarray1[i])
-        cv2.imshow('img',dst)
+        #cv2.imshow('img',dst)
 
         #cv2.imshow("Show MASK Image", img_masked)
         
         #cv2.imshow("Show MASK Image", img_masked)
         #cv2.imwrite(frame, img_masked)
-        k = cv2.waitKey(rate)
+        #k = cv2.waitKey(rate)
+        writer.write(dst)
         
         
     #video.release()
