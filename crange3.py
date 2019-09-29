@@ -68,13 +68,14 @@ def main():
     #writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
+
     for f in range(allframe):
         ret, frame = video.read()
         dst = copy.copy(frame)
 
+
         gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
         edges = cv2.Canny(gray,100,255,apertureSize = 3)
-
         lines = cv2.HoughLines(edges,1,np.pi/180,10)
         l = []
         for i in range(100):
@@ -158,16 +159,11 @@ def main():
         colorarray1 = ['blue','green','white','yellow']
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
-            
             for j in range(width):
                 for k in range(height):
                     if j < int(mean0[0]) or j > int(mean1[0]) or k < int(mean0[1]) or int(k > mean1[1]):
-                        print(a)
                         mask[k][j] = 0
             dst = changecolor(height,width,dst,mask,colorarray1[i])
-            if i == 0:
-                cv2.imshow('Frame',mask)
-                #print(mask[30])
         #writer.write(dst)
         cv2.imshow('Frames',dst)
         k = cv2.waitKey(rate)
