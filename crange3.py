@@ -82,18 +82,8 @@ def main():
             black = [0, 0, 0]
             img_masked[np.where((img_masked != black).all(axis=2))] = white
             dst = changecolor(height,width,dst,img_masked,colorarray1[i])
-        #cv2.imshow('img',dst)
-
-        #cv2.imshow("Show MASK Image", img_masked)
-        
-        #cv2.imshow("Show MASK Image", img_masked)
-        #cv2.imwrite(frame, img_masked)
-        #k = cv2.waitKey(rate)
         writer.write(dst)
         print(allframe,f)
-        
-        
-    #video.release()
     cv2.destroyAllWindows()
 
 
