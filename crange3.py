@@ -99,7 +99,7 @@ def main():
                                 start = k
                             cnt += 1
                         else:
-                            if cnt > min(width, height) / 9:
+                            if cnt > min(width, height) / 5:
                                 for o in range(start, k):
                                     mask[o][j] = 0
                             cnt = 0
