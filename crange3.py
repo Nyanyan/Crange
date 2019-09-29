@@ -26,16 +26,40 @@ def find_circle_of_target_color(image, color):
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
     return mask
 
-def color_detect(img):
+def color_detect(img,color):
     # HSV色空間に変換
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # 色のHSVの値域
-    hsv_min = np.array([30,100,50])
-    hsv_max = np.array([80,255,255])
+    a = []
+    b = []
+    if color == 'white':
+        a = [0,150,150]
+        b = [360,255,255]
+    elif color == 'yellow':
+        a = [40,50,50]
+        b = [70,255,255]
+    elif color == 'green':
+        a = [50,50,50]
+        b = [70,255,255]
+    elif color == 'blue':
+        a = [70,50,50]
+        b = [140,255,255]
+    hsv_min = np.array(a)
+    hsv_max = np.array(b)
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
     return mask
 
-VIDEOFILE = 'sample1' #ビデオファイル名
+def changecolor(height,width,frame,img_masked):
+    dst = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
+    for y in range(0, height):
+        for x in range(0, width):
+            if (img_masked[y][x] == 0).all(): #黒以外
+                dst[y][x] = frame[y][x] 
+            else:
+                dst[y][x] = (0,0,255)
+    return dst
+
+VIDEOFILE = 'sample' #ビデオファイル名
 
 
 def main():
@@ -48,7 +72,7 @@ def main():
         height, width, channels = frame.shape[:3]
 
         
-        mask = color_detect(frame)
+        mask = color_detect(frame,'green')
         #cv2.imshow("Mask", mask)
         #mask = np.array(mask).reshape((-1,1,2)).astype(np.int32)
         img_masked = cv2.bitwise_and(frame, frame, mask=mask)
@@ -63,14 +87,8 @@ def main():
         color = [0, 0, 255]
         black = [0, 0, 0]
         img_masked[np.where((img_masked != black).all(axis=2))] = color
+        dst = changecolor(height,width,frame,img_masked)
         
-        dst = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
-        for y in range(0, height):
-            for x in range(0, width):
-                if (img_masked[y][x] == 0).all(): # 「青・緑・赤」すべてが241以上なら
-                    dst[y][x] = frame[y][x] # 隠れていない部分なので、「lena.jpg」の画素を代入
-                else:
-                    dst[y][x] = (0,0,255) # 隠れている部分なので、黒にする
         cv2.imshow('img',dst)
 
         #cv2.imshow("Show MASK Image", img_masked)
