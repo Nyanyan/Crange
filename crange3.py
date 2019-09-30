@@ -3,6 +3,7 @@ import cv2 #映像処理
 import numpy as np
 import math
 import copy
+import sys
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -63,6 +64,8 @@ def main():
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
     resize = 0.4
+    b = 200 #ステータスバーの上限
+    cnt = 0
 
     for f in range(allframe):
         ret, frame_default = video.read()
@@ -92,7 +95,16 @@ def main():
         #cv2.imshow('Frames',mask)
         #k = cv2.waitKey(rate)
         
-        print(allframe,f)
+        if f % (allframe // b) == 0:
+            sys.stdout.write("\r")
+            if cnt <= b:
+                for i in range(cnt):
+                    sys.stdout.write("=")
+                for i in range(b - cnt):
+                    sys.stdout.write(" ")
+            sys.stdout.write("|")
+            sys.stdout.flush()
+            cnt+=1
     cv2.destroyAllWindows()
 
 
