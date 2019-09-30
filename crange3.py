@@ -20,7 +20,7 @@ def color_detect(img,color):
         a = [50,50,50]
         b = [70,255,255]
     elif color == 'blue':
-        a = [70,50,50]
+        a = [80,50,50]
         b = [140,255,255]
     elif color == 'red':
         a = [160,50,50]
@@ -71,6 +71,18 @@ def main():
         colorarray1 = ['blue','green','white','yellow']
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
+            if np.count_nonzero(mask) > 0:
+                # ラベリング処理
+                nLabels, labelImages, label, center = cv2.connectedComponentsWithStats(mask)
+                # label = cv2.connectedComponentsWithStats(mask)
+                # ブロブ情報を項目別に抽出
+                #n = label[0] - 1
+                if i == 0:
+                    print(label)
+                #data = np.delete(label[2], 0, 0)
+                for j in range(len(label)):
+                    mask[label[j][4] > 50] = [0,0,0]
+                
             '''
             for j in range(width):
                 cnt = 0
@@ -102,10 +114,10 @@ def main():
             '''
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
-        #cv2.imshow('Frames',dst)
+        cv2.imshow('Frames',dst)
         #k = cv2.waitKey(rate)
         
-        print(allframe,f)
+        #print(allframe,f)
     cv2.destroyAllWindows()
 
 
