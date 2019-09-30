@@ -12,8 +12,8 @@ def color_detect(img,color):
     a = []
     b = []
     if color == 'white':
-        a = [0,0,100]
-        b = [180,50,255]
+        a = [0,0,50]
+        b = [180,100,255]
     elif color == 'yellow':
         a = [20,50,50]
         b = [50,255,255]
@@ -51,7 +51,7 @@ def changecolor(height,width,dst,img_masked, color):
     dst[img_masked == 255] = a
     return dst
 
-VIDEOFILE = 'sample' #ビデオファイル名
+VIDEOFILE = 'sample1' #ビデオファイル名
 fps = 30
 
 def main():
