@@ -48,10 +48,10 @@ def changecolor(height,width,dst,img_masked, color):
         a = [0,0,255]
     elif color == 'orange':
         a = [0,100,255]
-    dst[img_masked == 255] = a
+    dst[img_masked > 0] = a
     return dst
 
-VIDEOFILE = 'sample' #ビデオファイル名
+VIDEOFILE = 'sample3' #ビデオファイル名
 fps = 30
 
 def main():
@@ -63,7 +63,7 @@ def main():
     writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
-    resize = 0.4
+    resize = 0.5
     b = 50 #ステータスバーの上限
     cnt = 0
 
@@ -78,6 +78,18 @@ def main():
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
+                deldata = []
+                '''
+                for j in range(len(data)):
+                    if data[j][4] > 1000 * resize or data[j][4] < 5 * resize:
+                        deldata.append(j)
+                for j in range(len(labelImages)):
+                    for k in range(len(labelImages[j])):
+                        for o in range(len(deldata)):
+                            if deldata[o] == labelImages[j][k] and labelImages[j][k] != 0:
+                                labelImages[j][k] = 0
+                '''
+                
                 for j in range(len(data)):
                     #if i == 0:
                         #print(data[j][4])
@@ -88,6 +100,7 @@ def main():
                                     for o in range(len(labelImages[k])):
                                         if labelImages[k][o] == j:
                                             mask[k][o] = 0
+                
                         #print(mask)
             mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
             dst = changecolor(height,width,dst,mask,colorarray1[i])
