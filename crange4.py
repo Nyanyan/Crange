@@ -51,78 +51,101 @@ def changecolor(height,width,dst,img_masked, color):
         a = [0,100,255]
     dst[img_masked > 0] = a
     return dst
+    
 
 def main():
+    #b = 50 #ステータスバーの上限
+    VIDEOPATH = 'C:/home/Crange/sample3.mp4' #ビデオパス
+    resize = 0.5
+
     root = tkinter.Tk()
-    root.title("Crange4")
+    root.title("Crange4 Setting")
     root.geometry("500x500")
     canvas = tkinter.Canvas(root, width = 100, height = 100)
-    videopathbox = tkinter.Entry()
+
+    videopathbox = tkinter.Entry(width=50)
+    videopathbox.insert(tkinter.END,"video path")
     videopathbox.pack()
 
-    resize = 0.5
-    VIDEOPATH = videopathbox.get() #ビデオパス
-    b = 50 #ステータスバーの上限
+    def pathfunc():
+        VIDEOPATH = videopathbox.get()
+        videopathbox.delete(0, tkinter.END)
+        videopathbox.insert(tkinter.END,"OK")
+        print(VIDEOPATH)
 
+    pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
+    pathbutton.pack()
+
+    compressionbox = tkinter.Entry(width=50)
+    compressionbox.insert(tkinter.END,"compression")
+    compressionbox.pack()
+
+    def compressionfunc():
+        resize = compressionbox.get()
+        compressionbox.delete(0, tkinter.END)
+        compressionbox.insert(tkinter.END,"OK")
+        print(resize)
+
+    compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
+    compressionbutton.pack()
+    
+    def mainprocessing():
+        video = cv2.VideoCapture(VIDEOPATH)
+        height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+        fps = int(video.get(cv2.CAP_PROP_FPS))
+        fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+        writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
+        allframe = int(video.get(7)) #総フレーム数
+        rate = int(video.get(5)) #フレームレート
+        cnt = 0
+        percent = 0
+
+        for f in range(allframe):
+            ret, frame_default = video.read()
+            dst = copy.copy(frame_default)
+            frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
+
+            colorarray0 = ['white','yellow','green','blue']
+            colorarray1 = ['blue','green','white','yellow']
+            for i in range(len(colorarray0)):
+                mask = color_detect(frame,colorarray0[i])
+                if np.count_nonzero(mask) > 0:
+                    nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
+                    
+                    for j in range(len(data)):
+                        #if i == 0:
+                            #print(data[j][4])
+                        if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
+                            if i == 0:
+                                for k in range(len(labelImages)):
+                                    if j in labelImages[k]:
+                                        for o in range(len(labelImages[k])):
+                                            if labelImages[k][o] == j:
+                                                mask[k][o] = 0
+                    
+                            #print(mask)
+                mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
+                dst = changecolor(height,width,dst,mask,colorarray1[i])
+            writer.write(dst)
+            #cv2.imshow('Frames',mask)
+            #k = cv2.waitKey(rate)
+        
+            if int(f / allframe * 100) != percent:
+                percent = int(f / allframe * 100)
+                print(str(percent) + '%')
+                percentlabel = tkinter.Label(None, text=str(f)+'%')
+                percentlabel.pack()
+            root2.mainloop()
+                
+                
+        #cv2.destroyAllWindows()
+    
+    startbutton = tkinter.Button(root, text='OK', command=mainprocessing)
+    startbutton.pack()
+
+    
     root.mainloop()
-
-    video = cv2.VideoCapture(VIDEOPATH)
-    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-    fps = int(video.get(cv2.CAP_PROP_FPS))
-    fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-    writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
-    allframe = int(video.get(7)) #総フレーム数
-    rate = int(video.get(5)) #フレームレート
-    cnt = 0
-    percent = 0
-
-    for f in range(allframe):
-        ret, frame_default = video.read()
-        dst = copy.copy(frame_default)
-        frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
-
-        colorarray0 = ['white','yellow','green','blue']
-        colorarray1 = ['blue','green','white','yellow']
-        for i in range(len(colorarray0)):
-            mask = color_detect(frame,colorarray0[i])
-            if np.count_nonzero(mask) > 0:
-                nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                
-                for j in range(len(data)):
-                    #if i == 0:
-                        #print(data[j][4])
-                    if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
-                        if i == 0:
-                            for k in range(len(labelImages)):
-                                if j in labelImages[k]:
-                                    for o in range(len(labelImages[k])):
-                                        if labelImages[k][o] == j:
-                                            mask[k][o] = 0
-                
-                        #print(mask)
-            mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
-            dst = changecolor(height,width,dst,mask,colorarray1[i])
-        writer.write(dst)
-        #cv2.imshow('Frames',mask)
-        #k = cv2.waitKey(rate)
-        '''
-        if f % (allframe // b) == 0:
-            sys.stdout.write("\r")
-            if cnt <= b:
-                for i in range(cnt):
-                    sys.stdout.write("=")
-                for i in range(b - cnt):
-                    sys.stdout.write(" ")
-            sys.stdout.write("|")
-            sys.stdout.flush()
-            cnt+=1
-        '''
-        if int(f / allframe * 100) != percent:
-            percent = int(f / allframe * 100)
-            print(str(percent) + '%')
-            
-    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
