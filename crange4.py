@@ -53,43 +53,59 @@ def changecolor(height,width,dst,img_masked, color):
     return dst
     
 
-def main():
-    #b = 50 #ステータスバーの上限
-    VIDEOPATH = 'C:/home/Crange/sample3.mp4' #ビデオパス
-    resize = 0.5
+f = 0
+video = []
+height = 0
+width = 0
+fps = 0
+fourcc = 0
+writer = 0
+allframe = 0
+percent = 0
+percentvar = 'a'
 
-    root = tkinter.Tk()
-    root.title("Crange4 Setting")
-    root.geometry("500x500")
-    canvas = tkinter.Canvas(root, width = 100, height = 100)
+VIDEOPATH = '' #ビデオパス
+resize = 0.5
 
-    videopathbox = tkinter.Entry(width=50)
-    videopathbox.insert(tkinter.END,"video path")
-    videopathbox.pack()
 
-    def pathfunc():
-        VIDEOPATH = videopathbox.get()
-        videopathbox.delete(0, tkinter.END)
-        videopathbox.insert(tkinter.END,"OK")
+
+root = tkinter.Tk()
+root.title("Crange4 Setting")
+root.geometry("500x500")
+canvas = tkinter.Canvas(root, width = 100, height = 100)
+
+videopathbox = tkinter.Entry(width=50)
+videopathbox.insert(tkinter.END,"video path")
+videopathbox.pack()
+
+def pathfunc():
+    global VIDEOPATH
+    VIDEOPATH = videopathbox.get()
+    videopathbox.delete(0, tkinter.END)
+    videopathbox.insert(tkinter.END,"OK")
+    print(VIDEOPATH)
+
+pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
+pathbutton.pack()
+
+compressionbox = tkinter.Entry(width=50)
+compressionbox.insert(tkinter.END,"compression")
+compressionbox.pack()
+
+def compressionfunc():
+    resize = compressionbox.get()
+    compressionbox.delete(0, tkinter.END)
+    compressionbox.insert(tkinter.END,"OK")
+    print(resize)
+
+compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
+compressionbutton.pack()
+
+def mainprocessing():
+    global f
+    if f == 0:
+        global video, height, width, fps, fourcc, writer, allframe, percent
         print(VIDEOPATH)
-
-    pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
-    pathbutton.pack()
-
-    compressionbox = tkinter.Entry(width=50)
-    compressionbox.insert(tkinter.END,"compression")
-    compressionbox.pack()
-
-    def compressionfunc():
-        resize = compressionbox.get()
-        compressionbox.delete(0, tkinter.END)
-        compressionbox.insert(tkinter.END,"OK")
-        print(resize)
-
-    compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
-    compressionbutton.pack()
-    
-    def mainprocessing():
         video = cv2.VideoCapture(VIDEOPATH)
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -97,56 +113,56 @@ def main():
         fourcc = cv2.VideoWriter_fourcc(*'DIVX')
         writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
         allframe = int(video.get(7)) #総フレーム数
-        rate = int(video.get(5)) #フレームレート
-        cnt = 0
         percent = 0
+    global percentvar
 
-        for f in range(allframe):
-            ret, frame_default = video.read()
-            dst = copy.copy(frame_default)
-            frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
+    if f < allframe:
+        ret, frame_default = video.read()
+        dst = copy.copy(frame_default)
+        frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
 
-            colorarray0 = ['white','yellow','green','blue']
-            colorarray1 = ['blue','green','white','yellow']
-            for i in range(len(colorarray0)):
-                mask = color_detect(frame,colorarray0[i])
-                if np.count_nonzero(mask) > 0:
-                    nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                    
-                    for j in range(len(data)):
-                        #if i == 0:
-                            #print(data[j][4])
-                        if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
-                            if i == 0:
-                                for k in range(len(labelImages)):
-                                    if j in labelImages[k]:
-                                        for o in range(len(labelImages[k])):
-                                            if labelImages[k][o] == j:
-                                                mask[k][o] = 0
-                    
-                            #print(mask)
-                mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
-                dst = changecolor(height,width,dst,mask,colorarray1[i])
-            writer.write(dst)
-            #cv2.imshow('Frames',mask)
-            #k = cv2.waitKey(rate)
-        
-            if int(f / allframe * 100) != percent:
-                percent = int(f / allframe * 100)
-                print(str(percent) + '%')
-                percentlabel = tkinter.Label(None, text=str(f)+'%')
-                percentlabel.pack()
-            root2.mainloop()
+        colorarray0 = ['white','yellow','green','blue']
+        colorarray1 = ['blue','green','white','yellow']
+        for i in range(len(colorarray0)):
+            mask = color_detect(frame,colorarray0[i])
+            if np.count_nonzero(mask) > 0:
+                nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                 
+                for j in range(len(data)):
+                    #if i == 0:
+                        #print(data[j][4])
+                    if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
+                        if i == 0:
+                            for k in range(len(labelImages)):
+                                if j in labelImages[k]:
+                                    for o in range(len(labelImages[k])):
+                                        if labelImages[k][o] == j:
+                                            mask[k][o] = 0
                 
-        #cv2.destroyAllWindows()
-    
-    startbutton = tkinter.Button(root, text='OK', command=mainprocessing)
-    startbutton.pack()
+                        #print(mask)
+            mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
+            dst = changecolor(height,width,dst,mask,colorarray1[i])
+        writer.write(dst)
+        #cv2.imshow('Frames',mask)
+        #k = cv2.waitKey(rate)
+        f += 1
+        #print(f)
+        if int(f / allframe * 100) != percent:
+            percent = int(f / allframe * 100)
+            #print(str(percent) + '%')
+            percentvar.set('done:' + str(percent)+'%')
+        root.after(1,mainprocessing)
+            
+            
+    #cv2.destroyAllWindows()
 
-    
-    root.mainloop()
+startbutton = tkinter.Button(root, text='OK', command=mainprocessing)
+startbutton.pack()
 
+percentvar = tkinter.StringVar()
+percentvar.set('percentage')
+label = tkinter.Label(root, textvariable=percentvar)
+label.pack()
 
-if __name__ == "__main__":
-    main()
+root.mainloop()
+
