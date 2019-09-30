@@ -52,11 +52,21 @@ def changecolor(height,width,dst,img_masked, color):
     dst[img_masked > 0] = a
     return dst
 
-VIDEOFILE = 'sample3.mp4' #ビデオファイル名
-b = 200 #ステータスバーの上限
-
 def main():
-    video = cv2.VideoCapture('C:/home/Crange/' + VIDEOFILE)
+    root = tkinter.Tk()
+    root.title("Crange4")
+    root.geometry("500x500")
+    canvas = tkinter.Canvas(root, width = 100, height = 100)
+    videopathbox = tkinter.Entry()
+    videopathbox.pack()
+
+    resize = 0.5
+    VIDEOPATH = videopathbox.get() #ビデオパス
+    b = 50 #ステータスバーの上限
+
+    root.mainloop()
+
+    video = cv2.VideoCapture(VIDEOPATH)
     height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     fps = int(video.get(cv2.CAP_PROP_FPS))
@@ -64,8 +74,8 @@ def main():
     writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
-    resize = 0.5
     cnt = 0
+    percent = 0
 
     for f in range(allframe):
         ret, frame_default = video.read()
@@ -96,7 +106,7 @@ def main():
         writer.write(dst)
         #cv2.imshow('Frames',mask)
         #k = cv2.waitKey(rate)
-        
+        '''
         if f % (allframe // b) == 0:
             sys.stdout.write("\r")
             if cnt <= b:
@@ -107,6 +117,11 @@ def main():
             sys.stdout.write("|")
             sys.stdout.flush()
             cnt+=1
+        '''
+        if int(f / allframe * 100) != percent:
+            percent = int(f / allframe * 100)
+            print(str(percent) + '%')
+            
     cv2.destroyAllWindows()
 
 
