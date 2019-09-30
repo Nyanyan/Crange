@@ -47,14 +47,8 @@ def changecolor(height,width,dst,img_masked, color):
         a = [0,0,255]
     elif color == 'orange':
         a = [0,100,255]
-    out = np.zeros((height, width, 3), dtype = "uint8") # 合成画像用の変数を作成
-    for y in range(0, height):
-        for x in range(0, width):
-            if (img_masked[y][x] == 0): #黒
-                out[y][x] = dst[y][x] 
-            else:
-                out[y][x] = a
-    return out
+    dst[img_masked > 0] = a
+    return dst
 
 VIDEOFILE = 'sample3' #ビデオファイル名
 fps = 30
@@ -77,6 +71,7 @@ def main():
         colorarray1 = ['blue','green','white','yellow']
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
+            '''
             for j in range(width):
                 cnt = 0
                 start = 0
@@ -104,6 +99,7 @@ def main():
                                     mask[o][j] = 0
                             cnt = 0
                             start = 0
+            '''
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
         #cv2.imshow('Frames',dst)
