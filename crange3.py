@@ -62,10 +62,12 @@ def main():
     writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
+    resize = 0.4
 
     for f in range(allframe):
-        ret, frame = video.read()
-        dst = copy.copy(frame)
+        ret, frame_default = video.read()
+        dst = copy.copy(frame_default)
+        frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
 
         colorarray0 = ['white','yellow','green','blue']
         colorarray1 = ['blue','green','white','yellow']
@@ -73,46 +75,22 @@ def main():
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                print(data)
                 for j in range(len(data)):
-                    if data[j][4] > 1000000:
-                        mask = mask + labelImages
+                    #if i == 0:
+                        #print(data[j][4])
+                    if data[j][4] > 1000 * resize or data[j][4] < 5 * resize:
+                        if i == 0:
+                            for k in range(len(labelImages)):
+                                if j in labelImages[k]:
+                                    for o in range(len(labelImages)):
+                                        if labelImages[o][k] == j:
+                                            mask[o][k] = 0
                         #print(mask)
-                        
-                
-            '''
-            for j in range(width):
-                cnt = 0
-                start = 0
-                for k in range(height):
-                    if j > 0 and j < width - 2 and k > 0 and k < height - 2:
-                        if mask[k][j] == 0:
-                            tmp = 0
-                            if mask[k-1][j] == 255:
-                                tmp += 1
-                            if mask[k+1][j] == 255:
-                                tmp += 1
-                            if mask[k][j-1] == 255:
-                                tmp += 1
-                            if mask[k][j+1] == 255:
-                                tmp += 1
-                            if tmp >= 3:
-                                mask[k][j] = 255
-                        if mask[k][j] == 255 and (mask[k-1][j] == 255 or mask[k][j-1] == 255):
-                            if cnt == 0:
-                                start = k
-                            cnt += 1
-                        else:
-                            if cnt > min(width, height) / 5:
-                                for o in range(start, k):
-                                    mask[o][j] = 0
-                            cnt = 0
-                            start = 0
-            '''
+            mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
-        cv2.imshow('Frames',dst)
-        k = cv2.waitKey(rate)
+        #cv2.imshow('Frames',mask)
+        #k = cv2.waitKey(rate)
         
         print(allframe,f)
     cv2.destroyAllWindows()
