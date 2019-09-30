@@ -5,7 +5,6 @@ import math
 import copy
 import sys
 import tkinter
-from time import sleep
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -122,7 +121,6 @@ def mainprocessing():
     global f, status
     if f == 0:
         global video, height, width, fps, fourcc, writer, allframe, percent
-        print(VIDEOPATH)
         video = cv2.VideoCapture(VIDEOPATH)
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -195,5 +193,3 @@ label.pack()
 
 
 root.mainloop()
-
-cv2.waitKey(1)
