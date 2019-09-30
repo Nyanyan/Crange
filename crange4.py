@@ -5,6 +5,7 @@ import math
 import copy
 import sys
 import tkinter
+from time import sleep
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -63,6 +64,7 @@ writer = 0
 allframe = 0
 percent = 0
 percentvar = 'a'
+status = True
 
 VIDEOPATH = '' #ビデオパス
 resize = 0.5
@@ -102,7 +104,7 @@ compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
 compressionbutton.pack()
 
 def mainprocessing():
-    global f
+    global f, status
     if f == 0:
         global video, height, width, fps, fourcc, writer, allframe, percent
         print(VIDEOPATH)
@@ -116,7 +118,7 @@ def mainprocessing():
         percent = 0
     global percentvar
 
-    if f < allframe:
+    if f < allframe and status == True:
         ret, frame_default = video.read()
         dst = copy.copy(frame_default)
         frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
@@ -152,11 +154,23 @@ def mainprocessing():
             #print(str(percent) + '%')
             percentvar.set('done:' + str(percent)+'%')
         root.after(1,mainprocessing)
+    
+    else:
+        writer.release()
+        status = False
+        root.destroy()
             
             
     #cv2.destroyAllWindows()
 
-startbutton = tkinter.Button(root, text='OK', command=mainprocessing)
+startbutton = tkinter.Button(root, text='START', command=mainprocessing)
+startbutton.pack()
+
+def stop():
+    global status
+    status = False
+
+startbutton = tkinter.Button(root, text='STOP', command=stop)
 startbutton.pack()
 
 percentvar = tkinter.StringVar()
@@ -164,5 +178,7 @@ percentvar.set('percentage')
 label = tkinter.Label(root, textvariable=percentvar)
 label.pack()
 
+
 root.mainloop()
 
+cv2.waitKey(1)
