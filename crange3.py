@@ -51,7 +51,7 @@ def changecolor(height,width,dst,img_masked, color):
     dst[img_masked == 255] = a
     return dst
 
-VIDEOFILE = 'sample3' #ビデオファイル名
+VIDEOFILE = 'sample' #ビデオファイル名
 fps = 30
 
 def main():
@@ -85,9 +85,9 @@ def main():
                         if i == 0:
                             for k in range(len(labelImages)):
                                 if j in labelImages[k]:
-                                    for o in range(len(labelImages)):
-                                        if labelImages[o][k] == j:
-                                            mask[o][k] = 0
+                                    for o in range(len(labelImages[k])):
+                                        if labelImages[k][o] == j:
+                                            mask[k][o] = 0
                         #print(mask)
             mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
             dst = changecolor(height,width,dst,mask,colorarray1[i])
