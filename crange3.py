@@ -47,7 +47,7 @@ def changecolor(height,width,dst,img_masked, color):
         a = [0,0,255]
     elif color == 'orange':
         a = [0,100,255]
-    dst[img_masked > 0] = a
+    dst[img_masked == 255] = a
     return dst
 
 VIDEOFILE = 'sample3' #ビデオファイル名
@@ -72,16 +72,13 @@ def main():
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
-                # ラベリング処理
-                nLabels, labelImages, label, center = cv2.connectedComponentsWithStats(mask)
-                # label = cv2.connectedComponentsWithStats(mask)
-                # ブロブ情報を項目別に抽出
-                #n = label[0] - 1
-                if i == 0:
-                    print(label)
-                #data = np.delete(label[2], 0, 0)
-                for j in range(len(label)):
-                    mask[label[j][4] > 50] = [0,0,0]
+                nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
+                print(data)
+                for j in range(len(data)):
+                    if data[j][4] > 1000000:
+                        mask = mask + labelImages
+                        #print(mask)
+                        
                 
             '''
             for j in range(width):
@@ -115,9 +112,9 @@ def main():
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
         cv2.imshow('Frames',dst)
-        #k = cv2.waitKey(rate)
+        k = cv2.waitKey(rate)
         
-        #print(allframe,f)
+        print(allframe,f)
     cv2.destroyAllWindows()
 
 
