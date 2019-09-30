@@ -67,6 +67,7 @@ percentvar = 'a'
 status = True
 
 VIDEOPATH = '' #ビデオパス
+OUTPUTPATH = ''
 resize = 0.5
 
 
@@ -89,7 +90,21 @@ def pathfunc():
 
 pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
 pathbutton.pack()
+'''
+outpathbox = tkinter.Entry(width=50)
+outpathbox.insert(tkinter.END,"output path")
+outpathbox.pack()
 
+def outpathfunc():
+    global VIDEOPATH
+    OUTPUTPATH = outpathbox.get()
+    outpathbox.delete(0, tkinter.END)
+    outpathbox.insert(tkinter.END,"OK")
+    print(OUTPUTPATH)
+
+outpathbutton = tkinter.Button(root, text='OK', command=outpathfunc)
+outpathbutton.pack()
+'''
 compressionbox = tkinter.Entry(width=50)
 compressionbox.insert(tkinter.END,"compression")
 compressionbox.pack()
