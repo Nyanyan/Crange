@@ -12,22 +12,22 @@ def color_detect(img,color):
     a = []
     b = []
     if color == 'white':
-        a = [0,0,200]
-        b = [180,50,255]
+        a = [0,0,100]
+        b = [180,128,255]
     elif color == 'yellow':
-        a = [20,50,50]
+        a = [20,100,100]
         b = [50,255,255]
     elif color == 'green':
-        a = [50,50,50]
+        a = [50,100,100]
         b = [70,255,255]
     elif color == 'blue':
-        a = [80,50,50]
+        a = [80,150,50]
         b = [140,255,255]
     elif color == 'red':
         a = [160,50,50]
         b = [180,255,255]
     elif color == 'orange':
-        a = [0,50,50]
+        a = [0,100,100]
         b = [20,255,255]
     hsv_min = np.array(a)
     hsv_max = np.array(b)
@@ -51,11 +51,11 @@ def changecolor(height,width,dst,img_masked, color):
     dst[img_masked > 0] = a
     return dst
 
-VIDEOFILE = 'sample3' #ビデオファイル名
+VIDEOFILE = '00000.MTS' #ビデオファイル名
 fps = 30
 
 def main():
-    video = cv2.VideoCapture(VIDEOFILE+'.mp4')
+    video = cv2.VideoCapture(VIDEOFILE)
     height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     fps = int(video.get(cv2.CAP_PROP_FPS))
@@ -64,7 +64,7 @@ def main():
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
     resize = 0.5
-    b = 50 #ステータスバーの上限
+    b = 200 #ステータスバーの上限
     cnt = 0
 
     for f in range(allframe):
@@ -78,22 +78,11 @@ def main():
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                deldata = []
-                '''
-                for j in range(len(data)):
-                    if data[j][4] > 1000 * resize or data[j][4] < 5 * resize:
-                        deldata.append(j)
-                for j in range(len(labelImages)):
-                    for k in range(len(labelImages[j])):
-                        for o in range(len(deldata)):
-                            if deldata[o] == labelImages[j][k] and labelImages[j][k] != 0:
-                                labelImages[j][k] = 0
-                '''
                 
                 for j in range(len(data)):
                     #if i == 0:
                         #print(data[j][4])
-                    if data[j][4] > 1000 * resize or data[j][4] < 5 * resize:
+                    if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
                         if i == 0:
                             for k in range(len(labelImages)):
                                 if j in labelImages[k]:
