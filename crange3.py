@@ -12,8 +12,8 @@ def color_detect(img,color):
     a = []
     b = []
     if color == 'white':
-        a = [0,0,50]
-        b = [180,100,255]
+        a = [0,0,200]
+        b = [180,50,255]
     elif color == 'yellow':
         a = [20,50,50]
         b = [50,255,255]
@@ -51,7 +51,7 @@ def changecolor(height,width,dst,img_masked, color):
     dst[img_masked == 255] = a
     return dst
 
-VIDEOFILE = 'sample1' #ビデオファイル名
+VIDEOFILE = 'sample' #ビデオファイル名
 fps = 30
 
 def main():
@@ -64,7 +64,7 @@ def main():
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
     resize = 0.4
-    b = 200 #ステータスバーの上限
+    b = 50 #ステータスバーの上限
     cnt = 0
 
     for f in range(allframe):
