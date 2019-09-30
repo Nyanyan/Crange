@@ -4,6 +4,7 @@ import numpy as np
 import math
 import copy
 import sys
+import tkinter
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -51,11 +52,11 @@ def changecolor(height,width,dst,img_masked, color):
     dst[img_masked > 0] = a
     return dst
 
-VIDEOFILE = '00000.MTS' #ビデオファイル名
-fps = 30
+VIDEOFILE = 'sample3.mp4' #ビデオファイル名
+b = 200 #ステータスバーの上限
 
 def main():
-    video = cv2.VideoCapture(VIDEOFILE)
+    video = cv2.VideoCapture('C:/home/Crange/' + VIDEOFILE)
     height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     fps = int(video.get(cv2.CAP_PROP_FPS))
@@ -64,7 +65,6 @@ def main():
     allframe = int(video.get(7)) #総フレーム数
     rate = int(video.get(5)) #フレームレート
     resize = 0.5
-    b = 200 #ステータスバーの上限
     cnt = 0
 
     for f in range(allframe):
