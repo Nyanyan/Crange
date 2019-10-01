@@ -5,6 +5,7 @@ import math
 import copy
 import sys
 import tkinter
+import moviepy.editor as mp
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -187,6 +188,11 @@ def mainprocessing():
     else:
         writer.release()
         status = False
+        percentvar.set('Sound Encoding')
+        clip_input = mp.VideoFileClip(VIDEOPATH).subclip(0,f / fps)
+        clip_input.audio.write_audiofile('audio.mp3')
+        clip_output = mp.VideoFileClip(OUTPUTPATH).subclip()
+        clip_output.write_videofile(OUTPUTPATH, audio='audio.mp3')
         percentvar.set('Finished')
         #root.destroy()
 
