@@ -27,5 +27,3 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 ## How to Use
 
 TBD
-
-test
