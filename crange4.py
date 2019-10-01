@@ -195,6 +195,8 @@ def mainprocessing():
         clip_input.audio.write_audiofile('audio.mp3')
         clip_output = mp.VideoFileClip('video.mp4').subclip(0,stopsec)
         clip_output.write_videofile(OUTPUTPATH, audio='audio.mp3')
+        os.remove('video.mp4')
+        os.remove('audio.mp3')
         percentvar.set('Finished')
         #root.destroy()
 
