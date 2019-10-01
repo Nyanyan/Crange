@@ -64,6 +64,7 @@ allframe = 0
 percent = 0
 percentvar = 'a'
 status = True
+testframe = 0
 
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
@@ -124,8 +125,6 @@ def inputvideo():
     height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     fps = int(video.get(cv2.CAP_PROP_FPS))
-    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-    writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
     allframe = int(video.get(7))#総フレーム数
     rate = int(video.get(5)) #フレームレート
     video.release()
@@ -140,17 +139,29 @@ videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル�
 videolabel.pack() # 場所を指定　（top, bottom, left, or right）
 
 
-compressionbox = tkinter.Entry(width=50)
-compressionbox.insert(tkinter.END,"compression")
-compressionbox.pack()
+framebox = tkinter.Entry(width=50)
+framebox.insert(tkinter.END,"test frame")
+framebox.pack()
 
-def compressionfunc():
-    resize = compressionbox.get()
-    compressionbox.delete(0, tkinter.END)
-    compressionbox.insert(tkinter.END,"OK")
+def testframefunc():
+    global testframe
+    testframe = int(framebox.get())
+    framebox.delete(0, tkinter.END)
+    #framebox.insert(tkinter.END,"OK")
+    global video, height, width, fps, fourcc, writer, allframe, percent, rate
+    video = cv2.VideoCapture(VIDEOPATH)
+    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+    fps = int(video.get(cv2.CAP_PROP_FPS))
+    allframe = int(video.get(7))#総フレーム数
+    frame = []
+    for i in range(min(allframe, testframe)):
+        ret, frame = video.read()
+    cv2.imshow('test frame',frame)
+    #k = cv2.waitKey(rate)
 
-compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
-compressionbutton.pack()
+framebutton = tkinter.Button(root, text='OK', command=testframefunc)
+framebutton.pack()
 
 
 def mainprocessing():
