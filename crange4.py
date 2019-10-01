@@ -5,8 +5,13 @@ import math
 import copy
 import sys
 import tkinter
-import moviepy.editor as mp
 import os
+#from pydub import AudioSegment
+#import ffmpeg
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.VideoClip import ImageClip
+from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
+#import moviepy.editor as mp
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -191,10 +196,17 @@ def mainprocessing():
         status = False
         percentvar.set('Sound Encoding')
         stopsec = f / fps
-        clip_input = mp.VideoFileClip(VIDEOPATH).subclip(0,stopsec)
+        '''
+        clip_input = AudioSegment.from_file(VIDEOPATH, "mp4")
+        clip_input = sound[:stopsec * 1000]
+        clip_output = ffmpeg.output("video.mp4", clip_input, OUTPUTPATH, vcodec="copy", acodec="aac")
+        ffmpeg.run(clip_output)
+        '''
+        clip_input = VideoFileClip(VIDEOPATH).subclip(0,stopsec)
         clip_input.audio.write_audiofile('audio.mp3')
-        clip_output = mp.VideoFileClip('video.mp4').subclip(0,stopsec)
+        clip_output = VideoFileClip('video.mp4').subclip(0,stopsec)
         clip_output.write_videofile(OUTPUTPATH, audio='audio.mp3')
+        
         os.remove('video.mp4')
         os.remove('audio.mp3')
         percentvar.set('Finished')
