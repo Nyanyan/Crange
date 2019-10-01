@@ -72,10 +72,10 @@ allframe = 0
 percent = 0
 percentvar = 'a'
 status = True
-testframe = 0
+testframe = tkinter.IntVar(master=root,value=1)
 lightness = tkinter.IntVar(master=root,value=50)
 hue = tkinter.IntVar(master=root,value=0)
-resize = tkinter.IntVar(master=root,value=0.5)
+resize = tkinter.DoubleVar(master=root,value=0.50)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
 
@@ -90,7 +90,7 @@ def pathfunc():
     videopathbox.delete(0, tkinter.END)
     videopathbox.insert(tkinter.END,"OK")
 
-pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
+pathbutton = tkinter.Button(root, text='Videopath OK', command=pathfunc)
 pathbutton.pack()
 
 
@@ -104,7 +104,7 @@ def outpathfunc():
     outpathbox.delete(0, tkinter.END)
     outpathbox.insert(tkinter.END,"OK")
     
-outpathbutton = tkinter.Button(root, text='OK', command=outpathfunc)
+outpathbutton = tkinter.Button(root, text='Outputpath OK', command=outpathfunc)
 outpathbutton.pack()
 
 def inputvideo():
@@ -118,6 +118,35 @@ def inputvideo():
     video.release()
     videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
 
+    resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
+    resizelabel.pack() # 場所を指定　top, bottom, left, or right
+    resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
+    resizescale.pack()
+
+    lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
+    lightnesslabel.pack() # 場所を指定　top, bottom, left, or right
+    lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
+    lightnessscale.pack()
+
+    huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
+    huelabel.pack() # 場所を指定　top, bottom, left, or right
+    huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
+    huescale.pack()
+
+    testframelabel = tkinter.Label(root, text='test frame')  #文字ラベル設定
+    testframelabel.pack() # 場所を指定　top, bottom, left, or right
+    testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
+    testframescale.pack()
+
+    framebutton = tkinter.Button(root, text='test frame processing', command=testframefunc)
+    framebutton.pack()
+
+    startbutton = tkinter.Button(root, text='START', command=mainprocessing)
+    startbutton.pack()
+
+    stopbutton = tkinter.Button(root, text='STOP', command=stop)
+    stopbutton.pack()
+
 inputvideobutton = tkinter.Button(root, text='input video', command=inputvideo)
 inputvideobutton.pack()
 
@@ -127,38 +156,16 @@ videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル�
 videolabel.pack() # 場所を指定　top, bottom, left, or right
 
 
-resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
-resizelabel.pack() # 場所を指定　top, bottom, left, or right
-resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.1, from_=0.1, to=1)
-resizescale.pack()
 
-lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
-lightnesslabel.pack() # 場所を指定　top, bottom, left, or right
-lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
-lightnessscale.pack()
-
-huelabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
-huelabel.pack() # 場所を指定　top, bottom, left, or right
-huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
-huescale.pack()
-
-framebox = tkinter.Entry(width=50)
-framebox.insert(tkinter.END,"test frame")
-framebox.pack()
 
 def testframefunc():
     global testframe
-    testframe = int(framebox.get())
     #framebox.delete(0, tkinter.END)
     #framebox.insert(tkinter.END,"OK")
     global video, height, width, fps, fourcc, writer, allframe, percent, rate
     video = cv2.VideoCapture(VIDEOPATH)
-    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-    fps = int(video.get(cv2.CAP_PROP_FPS))
-    allframe = int(video.get(7))#総フレーム数
     frame_default = []
-    for i in range(min(allframe, testframe)):
+    for i in range(testframe.get()):
         ret, frame_default = video.read()
 
     dst = copy.copy(frame_default)
@@ -175,26 +182,15 @@ def testframefunc():
     cv2.imshow('test frame',dst)
     #k = cv2.waitKey(rate)
 
-framebutton = tkinter.Button(root, text='OK', command=testframefunc)
-framebutton.pack()
-
 
 def mainprocessing():
     global f, status
     if f == 0:
         global video, height, width, fps, fourcc, writer, allframe, percent, rate
         video = cv2.VideoCapture(VIDEOPATH)
-        height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-        fps = int(video.get(cv2.CAP_PROP_FPS))
-        fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-        writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
-        allframe = int(video.get(7))#総フレーム数
-        rate = int(video.get(5)) #フレームレート
+        fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+        writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
         percent = 0
-        print(VIDEOPATH)
-        print(OUTPUTPATH)
-        print(resize)
     global percentvar
 
     if f < allframe and status == True:
@@ -210,7 +206,7 @@ def mainprocessing():
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                 
                 for j in range(len(data)):
-                    if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
+                    if data[j][4] > 1 / 100 * width * height * resize.get() ** 2 or data[j][4] < 1 / 1000 * width * height * resize.get() ** 2:
                         if i == 0:
                             for k in range(len(labelImages)):
                                 if j in labelImages[k]:
@@ -221,9 +217,9 @@ def mainprocessing():
                         #print(mask)
             mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
             dst = changecolor(height,width,dst,mask,colorarray1[i])
-        writer.write(dst)
         #cv2.imshow('output',dst)
         #k = cv2.waitKey(rate)
+        writer.write(dst)
         f += 1
         #print(f)
         percent = int(f / allframe * 100)
@@ -240,15 +236,11 @@ def mainprocessing():
             
     #cv2.destroyAllWindows()
 
-startbutton = tkinter.Button(root, text='START', command=mainprocessing)
-startbutton.pack()
-
 def stop():
     global status
     status = False
 
-startbutton = tkinter.Button(root, text='STOP', command=stop)
-startbutton.pack()
+
 
 percentvar = tkinter.StringVar()
 percentvar.set('percentage')
