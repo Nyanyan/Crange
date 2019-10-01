@@ -82,44 +82,53 @@ def setmode():
 def inputvideo():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate
     video = cv2.VideoCapture(VIDEOPATH)
-    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-    fps = int(video.get(cv2.CAP_PROP_FPS))
-    allframe = int(video.get(7))#総フレーム数
-    rate = int(video.get(5)) #フレームレート
-    video.release()
-    
-    explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
-    explainlabel2.pack()
-    videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
-    videolabel.pack() # 場所を指定　top, bottom, left, or right
-    resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
-    resizelabel.pack() # 場所を指定　top, bottom, left, or right
-    resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
-    resizescale.pack()
-    lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
-    lightnesslabel.pack() # 場所を指定　top, bottom, left, or right
-    lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
-    lightnessscale.pack()
-    huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
-    huelabel.pack() # 場所を指定　top, bottom, left, or right
-    huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
-    huescale.pack()
-    testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
-    testframelabel.pack() # 場所を指定　top, bottom, left, or right
-    testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
-    testframescale.pack()
-    setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
-    setdefaultbutton.pack()
-    framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
-    framebutton.pack()
-    modebutton = tkinter.Button(root, text='Mode', command=setmode)
-    modebutton.pack()
-    startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
-    startbutton.pack()
-    stopbutton = tkinter.Button(root, text='Stop', command=stop)
-    stopbutton.pack()
-    videolabelvar = tkinter.StringVar()
+    if video.isOpened() == True and OUTPUTPATH != '':
+        height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+        fps = int(video.get(cv2.CAP_PROP_FPS))
+        allframe = int(video.get(7))#総フレーム数
+        rate = int(video.get(5)) #フレームレート
+        video.release()
+
+        inputvideobutton.config(state="disable")
+        explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
+        explainlabel2.pack()
+        videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
+        videolabel.pack() # 場所を指定　top, bottom, left, or right
+        resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
+        resizelabel.pack() # 場所を指定　top, bottom, left, or right
+        resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
+        resizescale.pack()
+        lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
+        lightnesslabel.pack() # 場所を指定　top, bottom, left, or right
+        lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
+        lightnessscale.pack()
+        huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
+        huelabel.pack() # 場所を指定　top, bottom, left, or right
+        huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
+        huescale.pack()
+        testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
+        testframelabel.pack() # 場所を指定　top, bottom, left, or right
+        testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
+        testframescale.pack()
+        setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
+        setdefaultbutton.pack()
+        framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
+        framebutton.pack()
+        modebutton = tkinter.Button(root, text='Mode', command=setmode)
+        modebutton.pack()
+        startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
+        startbutton.pack()
+        stopbutton = tkinter.Button(root, text='Stop', command=stop)
+        stopbutton.pack()
+        videolabelvar = tkinter.StringVar()
+    else:
+        videoopenwarning = tkinter.Tk()
+        videoopenwarning.title("Warning")
+        videoopenwarning.geometry("100x100")
+        warninglabel = tkinter.Label(videoopenwarning,text="Input Right Path")
+        warninglabel.pack()
+
 
 def testframefunc():
     global testframe
@@ -194,8 +203,6 @@ def mainprocessing():
         status = False
         percentvar.set('Finished')
         #root.destroy()
-            
-            
 
 def stop():
     global status
@@ -205,7 +212,8 @@ def stop():
 root = tkinter.Tk()
 root.title("Crange4 Setting")
 root.geometry("500x800")
-canvas = tkinter.Canvas(root, width = 100, height = 200)
+canvas = tkinter.Canvas(root, width = 500, height = 800)
+canvas.place(x=0,y=0)
 
 f = 0
 video = []
@@ -253,14 +261,22 @@ virtuallabel2.pack()
 inputvideobutton = tkinter.Button(root, text='Input Video', command=inputvideo)
 inputvideobutton.pack()
 
+#canvas.create_rectangle((200,220),(300,300),outline='black')
+
+statuslabel = tkinter.Label(root, text="===Status===")
+statuslabel.pack()
+
 modevar = tkinter.StringVar()
 modevar.set("White to Blue")
 modelabel = tkinter.Label(root, textvariable=modevar)
 modelabel.pack()
 
 percentvar = tkinter.StringVar()
-percentvar.set('processing percentage will be here')
+percentvar.set('processing percentage')
 label = tkinter.Label(root, textvariable=percentvar)
 label.pack()
+
+statuslabel2 = tkinter.Label(root, text="============")
+statuslabel2.pack()
 
 root.mainloop()
