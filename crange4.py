@@ -76,6 +76,7 @@ root.title("Crange4 Setting")
 root.geometry("500x500")
 canvas = tkinter.Canvas(root, width = 100, height = 100)
 
+
 videopathbox = tkinter.Entry(width=50)
 videopathbox.insert(tkinter.END,"video path")
 videopathbox.pack()
@@ -88,6 +89,7 @@ def pathfunc():
 
 pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
 pathbutton.pack()
+
 
 outpathbox = tkinter.Entry(width=50)
 outpathbox.insert(tkinter.END,"output path")
@@ -102,6 +104,7 @@ def outpathfunc():
 outpathbutton = tkinter.Button(root, text='OK', command=outpathfunc)
 outpathbutton.pack()
 
+
 compressionbox = tkinter.Entry(width=50)
 compressionbox.insert(tkinter.END,"compression")
 compressionbox.pack()
@@ -113,6 +116,7 @@ def compressionfunc():
 
 compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
 compressionbutton.pack()
+
 
 def inputvideo():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate
@@ -127,15 +131,26 @@ def inputvideo():
     video.release()
     videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
 
-compressionbutton = tkinter.Button(root, text='input video', command=inputvideo)
-compressionbutton.pack()
+inputvideobutton = tkinter.Button(root, text='input video', command=inputvideo)
+inputvideobutton.pack()
 
 videolabelvar = tkinter.StringVar()
 videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
-videolabel = tkinter.Label(root, text=videolabelvar)  #文字ラベル設定
+videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル設定
 videolabel.pack() # 場所を指定　（top, bottom, left, or right）
 
 
+compressionbox = tkinter.Entry(width=50)
+compressionbox.insert(tkinter.END,"compression")
+compressionbox.pack()
+
+def compressionfunc():
+    resize = compressionbox.get()
+    compressionbox.delete(0, tkinter.END)
+    compressionbox.insert(tkinter.END,"OK")
+
+compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
+compressionbutton.pack()
 
 
 def mainprocessing():
@@ -187,7 +202,7 @@ def mainprocessing():
         #print(f)
         percent = int(f / allframe * 100)
         #print(str(percent) + '%')
-        percentvar.set('done:' + str(percent)+'% ' + str(f) + '/' + str(allframe))
+        percentvar.set('done:' + str(percent)+'% (' + str(f) + '/' + str(allframe) + ')')
         root.after(1,mainprocessing)
     
     else:
