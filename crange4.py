@@ -6,6 +6,7 @@ import copy
 import sys
 import tkinter
 import moviepy.editor as mp
+import os
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -140,7 +141,7 @@ def mainprocessing():
         global video, height, width, fps, fourcc, writer, allframe, percent, rate
         video = cv2.VideoCapture(VIDEOPATH)
         fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-        writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
+        writer = cv2.VideoWriter('video.mp4', fourcc, fps, (width, height))
         percent = 0
         resizescale.config(state="disable")
         lightnessscale.config(state="disable")
@@ -189,9 +190,10 @@ def mainprocessing():
         writer.release()
         status = False
         percentvar.set('Sound Encoding')
-        clip_input = mp.VideoFileClip(VIDEOPATH).subclip(0,f / fps)
+        stopsec = f / fps
+        clip_input = mp.VideoFileClip(VIDEOPATH).subclip(0,stopsec)
         clip_input.audio.write_audiofile('audio.mp3')
-        clip_output = mp.VideoFileClip(OUTPUTPATH).subclip()
+        clip_output = mp.VideoFileClip('video.mp4').subclip(0,stopsec)
         clip_output.write_videofile(OUTPUTPATH, audio='audio.mp3')
         percentvar.set('Finished')
         #root.destroy()
