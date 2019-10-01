@@ -114,17 +114,21 @@ def compressionfunc():
 compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
 compressionbutton.pack()
 
+
+
+
 def mainprocessing():
     global f, status
     if f == 0:
-        global video, height, width, fps, fourcc, writer, allframe, percent
+        global video, height, width, fps, fourcc, writer, allframe, percent, rate
         video = cv2.VideoCapture(VIDEOPATH)
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
         fps = int(video.get(cv2.CAP_PROP_FPS))
         fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
         writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
-        allframe = int(video.get(7)) #総フレーム数
+        allframe = int(video.get(7))#総フレーム数
+        rate = int(video.get(5)) #フレームレート
         percent = 0
         print(VIDEOPATH)
         print(OUTPUTPATH)
@@ -144,8 +148,6 @@ def mainprocessing():
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                 
                 for j in range(len(data)):
-                    #if i == 0:
-                        #print(data[j][4])
                     if data[j][4] > 1 / 100 * width * height * resize ** 2 or data[j][4] < 1 / 1000 * width * height * resize ** 2:
                         if i == 0:
                             for k in range(len(labelImages)):
@@ -158,17 +160,17 @@ def mainprocessing():
             mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
-        #cv2.imshow('Frames',mask)
+        #cv2.imshow('output',dst)
         #k = cv2.waitKey(rate)
         f += 1
         #print(f)
-        if int(f / allframe * 100) != percent:
-            percent = int(f / allframe * 100)
-            #print(str(percent) + '%')
-            percentvar.set('done:' + str(percent)+'%')
+        percent = int(f / allframe * 100)
+        #print(str(percent) + '%')
+        percentvar.set('done:' + str(percent)+'% ' + str(f) + '/' + str(allframe))
         root.after(1,mainprocessing)
     
     else:
+        #frame.release()
         writer.release()
         status = False
         root.destroy()
