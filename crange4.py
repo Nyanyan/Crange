@@ -95,37 +95,21 @@ def inputvideo():
         inputvideobutton.config(state="disable")
         outpathbox.config(state="disable")
         videopathbox.config(state="disable")
-        explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
         explainlabel2.pack()
-        videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
-        videolabel.pack() # 場所を指定　top, bottom, left, or right
-        resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
-        resizelabel.pack() # 場所を指定　top, bottom, left, or right
-        resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
+        videolabel.pack()
+        resizelabel.pack()
         resizescale.pack()
-        lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
-        lightnesslabel.pack() # 場所を指定　top, bottom, left, or right
-        lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
+        lightnesslabel.pack()
         lightnessscale.pack()
-        huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
-        huelabel.pack() # 場所を指定　top, bottom, left, or right
-        huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
+        huelabel.pack()
         huescale.pack()
-        testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
-        testframelabel.pack() # 場所を指定　top, bottom, left, or right
-        testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
+        testframelabel.pack()
         testframescale.pack()
-        setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
         setdefaultbutton.pack()
-        framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
         framebutton.pack()
-        modebutton = tkinter.Button(root, text='Mode', command=setmode)
         modebutton.pack()
-        startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
         startbutton.pack()
-        stopbutton = tkinter.Button(root, text='Stop', command=stop)
         stopbutton.pack()
-        videolabelvar = tkinter.StringVar()
     else:
         videoopenwarning = tkinter.Tk()
         videoopenwarning.title("Warning")
@@ -172,6 +156,7 @@ def mainprocessing():
         huescale.config(state="disable")
         testframescale.config(state="disable")
         framebutton.config(state="disable")
+        setdefaultbutton.config(state="disable")
         modebutton.config(state="disable")
         startbutton.config(state="disable")
         print(VIDEOPATH)
@@ -289,5 +274,22 @@ label.pack()
 
 statuslabel2 = tkinter.Label(root, text="============")
 statuslabel2.pack()
+
+explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
+videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
+resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
+resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
+lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
+lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
+huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
+huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
+testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
+testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
+setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
+framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
+modebutton = tkinter.Button(root, text='Mode', command=setmode)
+startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
+stopbutton = tkinter.Button(root, text='Quit', command=stop)
+videolabelvar = tkinter.StringVar()
 
 root.mainloop()
