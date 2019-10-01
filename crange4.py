@@ -52,18 +52,6 @@ def changecolor(height,width,dst,img_masked, color):
         a = [0,100,255]
     dst[img_masked > 0] = a
     return dst
-    
-def pathfunc():
-    global VIDEOPATH
-    VIDEOPATH = videopathbox.get()
-    videopathbox.delete(0, tkinter.END)
-    videopathbox.insert(tkinter.END,"OK")
-
-def outpathfunc():
-    global OUTPUTPATH
-    OUTPUTPATH = outpathbox.get()
-    outpathbox.delete(0, tkinter.END)
-    outpathbox.insert(tkinter.END,"OK")
 
 def setdefault():
     lightness.set(50)
@@ -262,6 +250,9 @@ inputvideobutton.pack()
 statuslabel = tkinter.Label(root, text="===Status===")
 statuslabel.pack()
 
+videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
+videolabel.pack()
+
 modevar = tkinter.StringVar()
 modevar.set("White to Blue")
 modelabel = tkinter.Label(root, textvariable=modevar)
@@ -276,7 +267,6 @@ statuslabel2 = tkinter.Label(root, text="============")
 statuslabel2.pack()
 
 explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
-videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
 resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
 resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
 lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
