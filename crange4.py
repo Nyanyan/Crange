@@ -62,13 +62,13 @@ def setmode():
     global mode
     if mode == False:
         mode = True
-        modevar.set("Blue to White")
+        modevar.set("Mode: Blue to White")
     else:
         mode = False
-        modevar.set("White to Blue")
+        modevar.set("Mode: White to Blue")
 
 def inputvideo():
-    global video, height, width, fps, fourcc, writer, allframe, percent, rate, VIDEOPATH, OUTPUTPATH
+    global video, height, width, fps, fourcc, writer, allframe, percent, rate, VIDEOPATH, OUTPUTPATH, testframe
     VIDEOPATH = videopathbox.get()
     OUTPUTPATH = outpathbox.get()
     video = cv2.VideoCapture(VIDEOPATH)
@@ -80,6 +80,7 @@ def inputvideo():
         rate = int(video.get(5)) #フレームレート
         video.release()
 
+        videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
         inputvideobutton.config(state="disable")
         outpathbox.config(state="disable")
         videopathbox.config(state="disable")
@@ -92,6 +93,8 @@ def inputvideo():
         huelabel.pack()
         huescale.pack()
         testframelabel.pack()
+        testframe.set(1)
+        testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
         testframescale.pack()
         setdefaultbutton.pack()
         framebutton.pack()
@@ -107,8 +110,7 @@ def inputvideo():
 
 
 def testframefunc():
-    global testframe
-    global video, height, width, fps, fourcc, writer, allframe, percent, rate
+    global video, height, width, fps, fourcc, writer, allframe, percent, rate, testframe
     video = cv2.VideoCapture(VIDEOPATH)
     frame_default = []
     for i in range(testframe.get()):
@@ -137,7 +139,7 @@ def mainprocessing():
         global video, height, width, fps, fourcc, writer, allframe, percent, rate
         video = cv2.VideoCapture(VIDEOPATH)
         fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-        writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
+        writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
         percent = 0
         resizescale.config(state="disable")
         lightnessscale.config(state="disable")
@@ -210,7 +212,7 @@ allframe = 0
 percent = 0
 percentvar = 'a'
 status = True
-testframe = tkinter.IntVar(master=root,value=1)
+testframe = tkinter.IntVar(master=root)
 lightness = tkinter.IntVar(master=root,value=50)
 hue = tkinter.IntVar(master=root,value=0)
 resize = tkinter.DoubleVar(master=root,value=0.50)
@@ -250,11 +252,13 @@ inputvideobutton.pack()
 statuslabel = tkinter.Label(root, text="===Status===")
 statuslabel.pack()
 
-videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
+videolabelvar = tkinter.StringVar()
+videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
+videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル設定
 videolabel.pack()
 
 modevar = tkinter.StringVar()
-modevar.set("White to Blue")
+modevar.set("Mode: White to Blue")
 modelabel = tkinter.Label(root, textvariable=modevar)
 modelabel.pack()
 
@@ -274,12 +278,12 @@ lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightn
 huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
 huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
 testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
-testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
+testframescale = tkinter.Scale()
 setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
 framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
 modebutton = tkinter.Button(root, text='Mode', command=setmode)
 startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
-stopbutton = tkinter.Button(root, text='Quit', command=stop)
-videolabelvar = tkinter.StringVar()
+stopbutton = tkinter.Button(root, text='Stop', command=stop)
+
 
 root.mainloop()
