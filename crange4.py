@@ -8,28 +8,29 @@ import tkinter
 
 def color_detect(img,color):
     # HSV色空間に変換
+    global lightness
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # 色のHSVの値域
     a = []
     b = []
     if color == 'white':
-        a = [0,0,100]
-        b = [180,128,255]
+        a = [max(0,0+hue.get()),0,int(200 * lightness.get() / 100)]
+        b = [180+hue.get(),128,255]
     elif color == 'yellow':
-        a = [20,100,100]
-        b = [50,255,255]
+        a = [20+hue.get(),100,int(200 * lightness.get() / 100)]
+        b = [50+hue.get(),255,255]
     elif color == 'green':
-        a = [50,100,100]
-        b = [70,255,255]
+        a = [50+hue.get(),100,int(200 * lightness.get() / 100)]
+        b = [70+hue.get(),255,255]
     elif color == 'blue':
-        a = [80,150,50]
-        b = [140,255,255]
+        a = [80+hue.get(),150,int(100 * lightness.get() / 100)]
+        b = [140+hue.get(),255,255]
     elif color == 'red':
-        a = [160,50,50]
-        b = [180,255,255]
+        a = [160+hue.get(),50,int(100 * lightness.get() / 100)]
+        b = [min(180,180+hue.get()),255,255]
     elif color == 'orange':
-        a = [0,100,100]
-        b = [20,255,255]
+        a = [0,100+hue.get(),int(200 * lightness.get() / 100)]
+        b = [20+hue.get(),255,255]
     hsv_min = np.array(a)
     hsv_max = np.array(b)
     mask = cv2.inRange(hsv, hsv_min, hsv_max)
@@ -53,6 +54,13 @@ def changecolor(height,width,dst,img_masked, color):
     return dst
     
 
+
+
+root = tkinter.Tk()
+root.title("Crange4 Setting")
+root.geometry("500x500")
+canvas = tkinter.Canvas(root, width = 100, height = 100)
+
 f = 0
 video = []
 height = 0
@@ -65,17 +73,11 @@ percent = 0
 percentvar = 'a'
 status = True
 testframe = 0
-
+lightness = tkinter.IntVar(master=root,value=50)
+hue = tkinter.IntVar(master=root,value=0)
+resize = tkinter.IntVar(master=root,value=0.5)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
-resize = 0.5
-
-
-
-root = tkinter.Tk()
-root.title("Crange4 Setting")
-root.geometry("500x500")
-canvas = tkinter.Canvas(root, width = 100, height = 100)
 
 
 videopathbox = tkinter.Entry(width=50)
@@ -105,20 +107,6 @@ def outpathfunc():
 outpathbutton = tkinter.Button(root, text='OK', command=outpathfunc)
 outpathbutton.pack()
 
-
-compressionbox = tkinter.Entry(width=50)
-compressionbox.insert(tkinter.END,"compression")
-compressionbox.pack()
-
-def compressionfunc():
-    resize = compressionbox.get()
-    compressionbox.delete(0, tkinter.END)
-    compressionbox.insert(tkinter.END,"OK")
-
-compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
-compressionbutton.pack()
-
-
 def inputvideo():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate
     video = cv2.VideoCapture(VIDEOPATH)
@@ -136,8 +124,23 @@ inputvideobutton.pack()
 videolabelvar = tkinter.StringVar()
 videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
 videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル設定
-videolabel.pack() # 場所を指定　（top, bottom, left, or right）
+videolabel.pack() # 場所を指定　top, bottom, left, or right
 
+
+resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
+resizelabel.pack() # 場所を指定　top, bottom, left, or right
+resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.1, from_=0.1, to=1)
+resizescale.pack()
+
+lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
+lightnesslabel.pack() # 場所を指定　top, bottom, left, or right
+lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
+lightnessscale.pack()
+
+huelabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
+huelabel.pack() # 場所を指定　top, bottom, left, or right
+huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
+huescale.pack()
 
 framebox = tkinter.Entry(width=50)
 framebox.insert(tkinter.END,"test frame")
@@ -146,7 +149,7 @@ framebox.pack()
 def testframefunc():
     global testframe
     testframe = int(framebox.get())
-    framebox.delete(0, tkinter.END)
+    #framebox.delete(0, tkinter.END)
     #framebox.insert(tkinter.END,"OK")
     global video, height, width, fps, fourcc, writer, allframe, percent, rate
     video = cv2.VideoCapture(VIDEOPATH)
@@ -154,10 +157,22 @@ def testframefunc():
     width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     fps = int(video.get(cv2.CAP_PROP_FPS))
     allframe = int(video.get(7))#総フレーム数
-    frame = []
+    frame_default = []
     for i in range(min(allframe, testframe)):
-        ret, frame = video.read()
-    cv2.imshow('test frame',frame)
+        ret, frame_default = video.read()
+
+    dst = copy.copy(frame_default)
+    frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
+
+    colorarray0 = ['white','yellow','green','blue']
+    colorarray1 = ['blue','green','white','yellow']
+    for i in range(len(colorarray0)):
+        mask = color_detect(frame,colorarray0[i])
+        if np.count_nonzero(mask) > 0:
+            nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)            
+        mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
+        dst = changecolor(height,width,dst,mask,colorarray1[i])
+    cv2.imshow('test frame',dst)
     #k = cv2.waitKey(rate)
 
 framebutton = tkinter.Button(root, text='OK', command=testframefunc)
@@ -185,7 +200,7 @@ def mainprocessing():
     if f < allframe and status == True:
         ret, frame_default = video.read()
         dst = copy.copy(frame_default)
-        frame = cv2.resize(frame_default, dsize=None, fx=resize, fy=resize)
+        frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
 
         colorarray0 = ['white','yellow','green','blue']
         colorarray1 = ['blue','green','white','yellow']
@@ -204,7 +219,7 @@ def mainprocessing():
                                             mask[k][o] = 0
                 
                         #print(mask)
-            mask = cv2.resize(mask, dsize=None, fx=1 / resize, fy=1 / resize)
+            mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
         #cv2.imshow('output',dst)
