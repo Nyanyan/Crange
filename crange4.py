@@ -167,6 +167,13 @@ def mainprocessing():
         fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
         writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
         percent = 0
+        resizescale.config(state="disable")
+        lightnessscale.config(state="disable")
+        huescale.config(state="disable")
+        testframescale.config(state="disable")
+        framebutton.config(state="disable")
+        modebutton.config(state="disable")
+        startbutton.config(state="disable")
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
