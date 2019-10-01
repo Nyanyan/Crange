@@ -85,25 +85,23 @@ def pathfunc():
     VIDEOPATH = videopathbox.get()
     videopathbox.delete(0, tkinter.END)
     videopathbox.insert(tkinter.END,"OK")
-    print(VIDEOPATH)
 
 pathbutton = tkinter.Button(root, text='OK', command=pathfunc)
 pathbutton.pack()
-'''
+
 outpathbox = tkinter.Entry(width=50)
 outpathbox.insert(tkinter.END,"output path")
 outpathbox.pack()
 
 def outpathfunc():
-    global VIDEOPATH
+    global OUTPUTPATH
     OUTPUTPATH = outpathbox.get()
     outpathbox.delete(0, tkinter.END)
     outpathbox.insert(tkinter.END,"OK")
-    print(OUTPUTPATH)
-
+    
 outpathbutton = tkinter.Button(root, text='OK', command=outpathfunc)
 outpathbutton.pack()
-'''
+
 compressionbox = tkinter.Entry(width=50)
 compressionbox.insert(tkinter.END,"compression")
 compressionbox.pack()
@@ -112,7 +110,6 @@ def compressionfunc():
     resize = compressionbox.get()
     compressionbox.delete(0, tkinter.END)
     compressionbox.insert(tkinter.END,"OK")
-    print(resize)
 
 compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
 compressionbutton.pack()
@@ -125,10 +122,13 @@ def mainprocessing():
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
         fps = int(video.get(cv2.CAP_PROP_FPS))
-        fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-        writer = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
+        fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+        writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
         allframe = int(video.get(7)) #総フレーム数
         percent = 0
+        print(VIDEOPATH)
+        print(OUTPUTPATH)
+        print(resize)
     global percentvar
 
     if f < allframe and status == True:
