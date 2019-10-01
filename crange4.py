@@ -9,8 +9,6 @@ import os
 #from pydub import AudioSegment
 #import ffmpeg
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.VideoClip import ImageClip
-from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 #import moviepy.editor as mp
 
 def color_detect(img,color):
@@ -79,13 +77,21 @@ def inputvideo():
     VIDEOPATH = videopathbox.get()
     OUTPUTPATH = outpathbox.get()
     video = cv2.VideoCapture(VIDEOPATH)
-    if video.isOpened() == True and OUTPUTPATH != '':
+    if video.isOpened() and OUTPUTPATH != '':
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
         fps = int(video.get(cv2.CAP_PROP_FPS))
-        allframe = int(video.get(7))#総フレーム数
-        rate = int(video.get(5)) #フレームレート
+        #allframe = int(video.get(CV_CAP_PROP_FRAME_COUNT))#総フレーム数
+        #rate = int(video.get(5)) #フレームレート
         video.release()
+        allframe = 0
+        video2 = cv2.VideoCapture(VIDEOPATH)
+        while True: #pyinstallerでなぜかフレーム数読み込みがうまくいかないので
+            ret, frame = video2.read()
+            if not ret:
+                break  # 映像取得に失敗
+            else:
+                allframe += 1
 
         videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
         inputvideobutton.config(state="disable")
@@ -141,7 +147,7 @@ def testframefunc():
 
 
 def mainprocessing():
-    global f, status
+    global f, status, percentvar
     if f == 0:
         global video, height, width, fps, fourcc, writer, allframe, percent, rate
         video = cv2.VideoCapture(VIDEOPATH)
@@ -159,7 +165,6 @@ def mainprocessing():
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
-    global percentvar
     if f < allframe and status == True:
         ret, frame_default = video.read()
         dst = copy.copy(frame_default)
