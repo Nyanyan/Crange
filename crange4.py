@@ -80,7 +80,9 @@ def setmode():
         modevar.set("White to Blue")
 
 def inputvideo():
-    global video, height, width, fps, fourcc, writer, allframe, percent, rate
+    global video, height, width, fps, fourcc, writer, allframe, percent, rate, VIDEOPATH, OUTPUTPATH
+    VIDEOPATH = videopathbox.get()
+    OUTPUTPATH = outpathbox.get()
     video = cv2.VideoCapture(VIDEOPATH)
     if video.isOpened() == True and OUTPUTPATH != '':
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -91,6 +93,8 @@ def inputvideo():
         video.release()
 
         inputvideobutton.config(state="disable")
+        outpathbox.config(state="disable")
+        videopathbox.config(state="disable")
         explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
         explainlabel2.pack()
         videolabel = tkinter.Label(root, text="height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))  #文字ラベル設定
@@ -242,8 +246,8 @@ pathlabel = tkinter.Label(root, text='Input Path')
 pathlabel.pack()
 videopathbox = tkinter.Entry(width=50)
 videopathbox.pack()
-pathbutton = tkinter.Button(root, text='Input Path Confirm', command=pathfunc)
-pathbutton.pack()
+#pathbutton = tkinter.Button(root, text='Input Path Confirm', command=pathfunc)
+#pathbutton.pack()
 
 virtuallabel1 = tkinter.Label(root, text='')
 virtuallabel1.pack()
@@ -252,8 +256,8 @@ outpathlabel = tkinter.Label(root, text='Output Path')
 outpathlabel.pack()
 outpathbox = tkinter.Entry(width=50)
 outpathbox.pack()
-outpathbutton = tkinter.Button(root, text='Output Path Confirm', command=outpathfunc)
-outpathbutton.pack()
+#outpathbutton = tkinter.Button(root, text='Output Path Confirm', command=outpathfunc)
+#outpathbutton.pack()
 
 virtuallabel2 = tkinter.Label(root, text='')
 virtuallabel2.pack()
