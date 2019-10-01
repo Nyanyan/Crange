@@ -114,6 +114,27 @@ def compressionfunc():
 compressionbutton = tkinter.Button(root, text='OK', command=compressionfunc)
 compressionbutton.pack()
 
+def inputvideo():
+    global video, height, width, fps, fourcc, writer, allframe, percent, rate
+    video = cv2.VideoCapture(VIDEOPATH)
+    height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+    fps = int(video.get(cv2.CAP_PROP_FPS))
+    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    writer = cv2.VideoWriter(OUTPUTPATH, fourcc, fps, (width, height))
+    allframe = int(video.get(7))#総フレーム数
+    rate = int(video.get(5)) #フレームレート
+    video.release()
+    videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
+
+compressionbutton = tkinter.Button(root, text='input video', command=inputvideo)
+compressionbutton.pack()
+
+videolabelvar = tkinter.StringVar()
+videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
+videolabel = tkinter.Label(root, text=videolabelvar)  #文字ラベル設定
+videolabel.pack() # 場所を指定　（top, bottom, left, or right）
+
 
 
 
