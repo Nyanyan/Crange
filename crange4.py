@@ -62,15 +62,31 @@ def setdefault():
     lightness.set(50)
     hue.set(0)
     resize.set(0.5)
+    deletenum.set(100)
+    deletingfalg = True
+    deletevar.set("Deleting Mode: True")
+    mode = False
+    modevar.set("Color Mode: White to Blue")
 
 def setmode():
     global mode
     if mode == False:
         mode = True
-        modevar.set("Mode: Blue to White")
+        modevar.set("Color Mode: Blue to White")
     else:
         mode = False
-        modevar.set("Mode: White to Blue")
+        modevar.set("Color Mode: White to Blue")
+
+def delete():
+    global deleteflag
+    if deleteflag == True:
+        deleteflag = False
+        deletevar.set("Deleting Mode: False")
+        deletescale.config(state="disable")
+    else:
+        deleteflag = True
+        deletevar.set("Deleting Mode: True")
+        deletescale.config(state="active")
 
 def inputvideo():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate, VIDEOPATH, OUTPUTPATH, testframe
@@ -109,11 +125,14 @@ def inputvideo():
         testframe.set(1)
         testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
         testframescale.pack()
+        deletelabel.pack()
+        deletescale.pack()
+        deletebutton.pack()
+        modebutton.pack()
         setdefaultbutton.pack()
         framebutton.pack()
-        modebutton.pack()
-        startbutton.pack()
-        stopbutton.pack()
+        startbutton.pack(fill='x')
+        stopbutton.pack(fill='x')
     else:
         videoopenwarning = tkinter.Tk()
         videoopenwarning.title("Warning")
@@ -132,7 +151,7 @@ def testframefunc():
     frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
     colorarray0 = ['white','yellow','green','blue']
     colorarray1 = ['blue','green','white','yellow']
-    pre1 = 1 / 10 * width * height * resize.get() ** 2
+    pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     if mode == True:
         colorarray0, colorarray1 = colorarray1, colorarray0
@@ -140,13 +159,14 @@ def testframefunc():
         mask = color_detect(frame,colorarray0[i])
         if np.count_nonzero(mask) > 0:
             nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)   
-            for j in range(len(data)):
-                    if data[j][4] > pre1 or data[j][4] < pre1 / 100:
-                        for k in range(len(labelImages)):
-                            if j in labelImages[k]:
-                                for o in range(len(labelImages[k])):
-                                    if labelImages[k][o] == j:
-                                        mask[k][o] = 0         
+            if deleteflag == True:
+                for j in range(len(data)):
+                        if data[j][4] > pre1 or data[j][4] < pre1 / 100:
+                            for k in range(len(labelImages)):
+                                if j in labelImages[k]:
+                                    for o in range(len(labelImages[k])):
+                                        if labelImages[k][o] == j:
+                                            mask[k][o] = 0         
         mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
         dst = changecolor(height,width,dst,mask,colorarray1[i])
     cv2.imshow('test frame',dst)
@@ -166,13 +186,15 @@ def mainprocessing():
         huescale.config(state="disable")
         testframescale.config(state="disable")
         framebutton.config(state="disable")
-        setdefaultbutton.config(state="disable")
+        deletescale.config(state="disable")
+        deletebutton.config(state="disable")
         modebutton.config(state="disable")
+        setdefaultbutton.config(state="disable")
         startbutton.config(state="disable")
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
-    pre1 = 1 / 10 * width * height * resize.get() ** 2
+    pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     if f < allframe and status == True:
         ret, frame_default = video.read()
@@ -186,13 +208,14 @@ def mainprocessing():
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                for j in range(len(data)):
-                    if data[j][4] > pre1 or data[j][4] < pre1 / 100:
-                        for k in range(len(labelImages)):
-                            if j in labelImages[k]:
-                                for o in range(len(labelImages[k])):
-                                    if labelImages[k][o] == j:
-                                        mask[k][o] = 0
+                if deleteflag == True:
+                    for j in range(len(data)):
+                        if data[j][4] > pre1 or data[j][4] < pre1 / 100:
+                            for k in range(len(labelImages)):
+                                if j in labelImages[k]:
+                                    for o in range(len(labelImages[k])):
+                                        if labelImages[k][o] == j:
+                                            mask[k][o] = 0
             mask = cv2.resize(mask, dsize=None, fx=pre2, fy=pre2)
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         #cv2.imshow('output',dst)
@@ -250,9 +273,11 @@ testframe = tkinter.IntVar(master=root)
 lightness = tkinter.IntVar(master=root,value=50)
 hue = tkinter.IntVar(master=root,value=0)
 resize = tkinter.DoubleVar(master=root,value=0.50)
+deletenum = tkinter.DoubleVar(master=root,value=100)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
 mode = False #0: white to blue, 1: blue to white
+deleteflag = False
 
 
 explainlabel1 = tkinter.Label(root, text='Confirm Input & Output Path, then Input Video')
@@ -292,9 +317,14 @@ videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル�
 videolabel.pack()
 
 modevar = tkinter.StringVar()
-modevar.set("Mode: White to Blue")
+modevar.set("Color Mode: White to Blue")
 modelabel = tkinter.Label(root, textvariable=modevar)
 modelabel.pack()
+
+deletevar = tkinter.StringVar()
+deletevar.set("Deleting Mode: True")
+deletestatelabel = tkinter.Label(root, textvariable=deletevar)
+deletestatelabel.pack()
 
 percentvar = tkinter.StringVar()
 percentvar.set('processing percentage')
@@ -313,9 +343,12 @@ huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
 huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
 testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
 testframescale = tkinter.Scale()
+deletelabel = tkinter.Label(root, text='deleting size')  #文字ラベル設定
+deletescale = tkinter.Scale(master=root, orient="horizontal", variable=deletenum, from_=1, to=500)
+deletebutton = tkinter.Button(root, text='Delleting Mode', command=delete)
+modebutton = tkinter.Button(root, text='Color Mode', command=setmode)
 setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
 framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
-modebutton = tkinter.Button(root, text='Mode', command=setmode)
 startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
 stopbutton = tkinter.Button(root, text='Stop', command=stop)
 
