@@ -165,6 +165,8 @@ def mainprocessing():
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
+    pre1 = 1 / 100 * width * height * resize.get() ** 2
+    pre2 = 1 / resize.get()
     if f < allframe and status == True:
         ret, frame_default = video.read()
         dst = copy.copy(frame_default)
@@ -180,13 +182,13 @@ def mainprocessing():
             if np.count_nonzero(mask) > 0:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                 for j in range(len(data)):
-                    if data[j][4] > 1 / 100 * width * height * resize.get() ** 2 or data[j][4] < 1 / 1000 * width * height * resize.get() ** 2:
+                    if data[j][4] > pre1 or data[j][4] < pre1 / 10:
                         for k in range(len(labelImages)):
                             if j in labelImages[k]:
                                 for o in range(len(labelImages[k])):
                                     if labelImages[k][o] == j:
                                         mask[k][o] = 0
-            mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
+            mask = cv2.resize(mask, dsize=None, fx=pre2, fy=pre2)
             dst = changecolor(height,width,dst,mask,colorarray1[i])
         #cv2.imshow('output',dst)
         #k = cv2.waitKey(rate)
@@ -194,7 +196,7 @@ def mainprocessing():
         f += 1
         percent = int(f / allframe * 100)
         if f != allframe - 1:
-            percentvar.set('done:' + str(percent)+'% (' + str(f) + '/' + str(allframe) + ')')
+            percentvar.set('Processing:' + str(percent)+'% (' + str(f) + '/' + str(allframe) + ')')
         root.after(1,mainprocessing)
     else:
         writer.release()
