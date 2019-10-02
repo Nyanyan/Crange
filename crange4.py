@@ -132,14 +132,21 @@ def testframefunc():
     frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
     colorarray0 = ['white','yellow','green','blue']
     colorarray1 = ['blue','green','white','yellow']
+    pre1 = 1 / 10 * width * height * resize.get() ** 2
+    pre2 = 1 / resize.get()
     if mode == True:
-        tmp = colorarray0
-        colorarray0 = colorarray1
-        colorarray1 = tmp
+        colorarray0, colorarray1 = colorarray1, colorarray0
     for i in range(len(colorarray0)):
         mask = color_detect(frame,colorarray0[i])
         if np.count_nonzero(mask) > 0:
-            nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)            
+            nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)   
+            for j in range(len(data)):
+                    if data[j][4] > pre1 or data[j][4] < pre1 / 100:
+                        for k in range(len(labelImages)):
+                            if j in labelImages[k]:
+                                for o in range(len(labelImages[k])):
+                                    if labelImages[k][o] == j:
+                                        mask[k][o] = 0         
         mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
         dst = changecolor(height,width,dst,mask,colorarray1[i])
     cv2.imshow('test frame',dst)
@@ -165,7 +172,7 @@ def mainprocessing():
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
-    pre1 = 1 / 100 * width * height * resize.get() ** 2
+    pre1 = 1 / 10 * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     if f < allframe and status == True:
         ret, frame_default = video.read()
@@ -174,15 +181,13 @@ def mainprocessing():
         colorarray0 = ['white','yellow','green','blue']
         colorarray1 = ['blue','green','white','yellow']
         if mode == True:
-            tmp = colorarray0
-            colorarray0 = colorarray1
-            colorarray1 = tmp
+            colorarray0, colorarray1 = colorarray1, colorarray0
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                 for j in range(len(data)):
-                    if data[j][4] > pre1 or data[j][4] < pre1 / 10:
+                    if data[j][4] > pre1 or data[j][4] < pre1 / 100:
                         for k in range(len(labelImages)):
                             if j in labelImages[k]:
                                 for o in range(len(labelImages[k])):
