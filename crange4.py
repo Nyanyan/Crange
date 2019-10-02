@@ -121,15 +121,15 @@ def inputvideo():
         lightnessscale.pack()
         huelabel.pack()
         huescale.pack()
-        testframelabel.pack()
-        testframe.set(1)
-        testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
-        testframescale.pack()
         deletelabel.pack()
         deletescale.pack()
         deletebutton.pack()
         modebutton.pack()
         setdefaultbutton.pack()
+        testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
+        testframelabel.pack()
+        testframe.set(1)
+        testframescale.pack()
         framebutton.pack()
         startbutton.pack(fill='x')
         stopbutton.pack(fill='x')
@@ -277,7 +277,7 @@ deletenum = tkinter.DoubleVar(master=root,value=100)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
 mode = False #0: white to blue, 1: blue to white
-deleteflag = False
+deleteflag = True
 
 
 explainlabel1 = tkinter.Label(root, text='Confirm Input & Output Path, then Input Video')
@@ -341,13 +341,13 @@ lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
 lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
 huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
 huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
-testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
-testframescale = tkinter.Scale()
 deletelabel = tkinter.Label(root, text='deleting size')  #文字ラベル設定
 deletescale = tkinter.Scale(master=root, orient="horizontal", variable=deletenum, from_=1, to=500)
 deletebutton = tkinter.Button(root, text='Delleting Mode', command=delete)
 modebutton = tkinter.Button(root, text='Color Mode', command=setmode)
 setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
+testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
+testframescale = tkinter.Scale()
 framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
 startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
 stopbutton = tkinter.Button(root, text='Stop', command=stop)
