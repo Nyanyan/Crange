@@ -9,7 +9,7 @@ Are you a white-crossed cuber, or a blue-crossed cuber(, or color neutral)?
 
 You may feel confused if you see a video in which different-color-crossed cuber do something. This software, Crange, changes the cross color of that kind of video. Crange is named after “Change” and “Cross”.
 
-## How to Install / インストール方法
+## How to Install
 
 **This software supports only Windows 32 & 64 bit, Tested Windows10 64bit only**
 
@@ -28,7 +28,38 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 
 ## How to Use
 
-TBD
+1. Open CrangeX.exe
+2. Confirm “Input Path” and “Output Path”
+   **Both path must be right pathes**
+   <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_1.png" width="500">
+3. Press “Input Video” button
+4. 
+
+## Release Note
+
+### Crange 4.0
+
+First Release
+
+### Crange 4.1
+
+
+
+### Crange 4.2
+
+Fixed bug
+
+Disable buttons during processing
+
+### Crange 4.3
+
+Sound encoding
+
+Enable to choose deleting mask function
+
+Easier to use
+
+Speed up
 
 
 
