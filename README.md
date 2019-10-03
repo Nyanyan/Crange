@@ -30,10 +30,17 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 
 1. Open CrangeX.exe
 2. Confirm “Input Path” and “Output Path”
-   **Both path must be right pathes**
-   <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_1.png" width="500">
+   **Both path must be right paths**
+   <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_1.png" width="300">
 3. Press “Input Video” button
-4. 
+4. Adjust processing values
+   <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_2.png" width="300">
+   * compression
+     The value of compressing masks, whose colors changes (The inputted video never be compressed)
+   * lightness
+     The value of light, if lighter, the colors sensed will be lighter.
+   * hue
+     The value of hue, 
 
 ## Release Note
 
