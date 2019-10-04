@@ -335,7 +335,7 @@ statuslabel2 = tkinter.Label(root, text="============")
 statuslabel2.pack()
 
 explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
-resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
+resizelabel = tkinter.Label(root, text='Compression')  #文字ラベル設定
 resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
 lightnesslabel = tkinter.Label(root, text='Lightness')  #文字ラベル設定
 lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
