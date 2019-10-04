@@ -348,7 +348,7 @@ modebutton = tkinter.Button(root, text='Color Mode', command=setmode)
 setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
 testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
 testframescale = tkinter.Scale()
-framebutton = tkinter.Button(root, text='One Frame Processing', command=testframefunc)
+framebutton = tkinter.Button(root, text='Process One Frame', command=testframefunc)
 startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
 stopbutton = tkinter.Button(root, text='Stop', command=stop)
 
