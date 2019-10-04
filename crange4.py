@@ -337,16 +337,16 @@ statuslabel2.pack()
 explainlabel2 = tkinter.Label(root, text='Set Value and push One Frame Processing Button, If it is OK, Push Start Button')
 resizelabel = tkinter.Label(root, text='compression')  #文字ラベル設定
 resizescale = tkinter.Scale(master=root, orient="horizontal", variable=resize, resolution=0.25, from_=0.5, to=1)
-lightnesslabel = tkinter.Label(root, text='lightness')  #文字ラベル設定
+lightnesslabel = tkinter.Label(root, text='Lightness')  #文字ラベル設定
 lightnessscale = tkinter.Scale(master=root, orient="horizontal", variable=lightness, from_=0, to=100)
-huelabel = tkinter.Label(root, text='hue')  #文字ラベル設定
+huelabel = tkinter.Label(root, text='Hue')  #文字ラベル設定
 huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-20, to=20)
-deletelabel = tkinter.Label(root, text='deleting size')  #文字ラベル設定
+deletelabel = tkinter.Label(root, text='Deleting Size')  #文字ラベル設定
 deletescale = tkinter.Scale(master=root, orient="horizontal", variable=deletenum, from_=1, to=500)
 deletebutton = tkinter.Button(root, text='Delleting Mode', command=delete)
 modebutton = tkinter.Button(root, text='Color Mode', command=setmode)
 setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
-testframelabel = tkinter.Label(root, text='frame number')  #文字ラベル設定
+testframelabel = tkinter.Label(root, text='Frame Number')  #文字ラベル設定
 testframescale = tkinter.Scale()
 framebutton = tkinter.Button(root, text='Process One Frame', command=testframefunc)
 startbutton = tkinter.Button(root, text='Start', command=mainprocessing)
