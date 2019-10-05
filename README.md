@@ -87,7 +87,9 @@ Easier to use
 
 Speed up
 
+### Crange 4.4
 
+Fixed bug
 
 ## 概要
 
@@ -186,3 +188,8 @@ Speed up
 使いやすく
 
 高速化
+
+### Crange 4.4
+
+バグ修正
+
