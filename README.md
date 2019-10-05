@@ -31,9 +31,9 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 1. Open CrangeX.exe
 2. Confirm “Input Path” and “Output Path”
    **Both path must be right paths**
-   <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_1.png" width="300">
-3. Press “Input Video” button
-4. Adjust processing values
+3. <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_1.png" width="300">
+4. Press “Input Video” button
+5. Adjust processing values
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_2.png" width="300">
    * Compression
      The value of compressing masks, whose colors changes (The inputted video never be compressed)
@@ -53,8 +53,8 @@ You may feel confused if you see a video in which different-color-crossed cuber 
      You can see what these numbers you set will work with processing any one frame. This number is the frame you process.
    * Process One Frame
      The button to process one frame
-5. Check status. If you start processing, the percentage will be displayed.
-6. Start (and stop) processing with following button. The window will be like the image.
+6. Check status. If you start processing, the percentage will be displayed.
+7. Start (and stop) processing with following button. The window will be like the image.
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_3.png" width="300">
    * Start
      Start processing
