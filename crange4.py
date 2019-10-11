@@ -65,8 +65,10 @@ def setdefault():
     deletenum.set(60)
     deletingfalg = True
     deletevar.set("Deleting Mode: True")
-    mode = False
-    modevar.set("Color Mode: White to Blue")
+    modefrom = 1
+    modefromvar.set("Color Mode (From): Blue")
+    modeto = 0
+    modetovar.set("Color Mode (To): White")
 
 def setmodefrom():
     global modefrom
@@ -141,9 +143,9 @@ def inputvideo():
         deletelabel.pack()
         deletescale.pack()
         deletebutton.pack()
+        setdefaultbutton.pack()
         modefrombutton.pack()
         modetobutton.pack()
-        setdefaultbutton.pack()
         testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
         testframelabel.pack()
         testframe.set(1)
@@ -305,7 +307,7 @@ resize = tkinter.DoubleVar(master=root,value=0.50)
 deletenum = tkinter.DoubleVar(master=root,value=60)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
-modefrom = 0 #white, blue, jwhite, jblue
+modefrom = 1 #white, blue, jwhite, jblue
 modeto = 0 #white, blue, jwhite, jblue
 deleteflag = True
 
@@ -346,8 +348,13 @@ videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(al
 videolabel = tkinter.Label(root, textvariable=videolabelvar)  #文字ラベル設定
 videolabel.pack()
 
+deletevar = tkinter.StringVar()
+deletevar.set("Deleting Mode: True")
+deletestatelabel = tkinter.Label(root, textvariable=deletevar)
+deletestatelabel.pack()
+
 modefromvar = tkinter.StringVar()
-modefromvar.set("Color Mode (From): White")
+modefromvar.set("Color Mode (From): Blue")
 modefromlabel = tkinter.Label(root, textvariable=modefromvar)
 modefromlabel.pack()
 
@@ -355,11 +362,6 @@ modetovar = tkinter.StringVar()
 modetovar.set("Color Mode (To): White")
 modetolabel = tkinter.Label(root, textvariable=modetovar)
 modetolabel.pack()
-
-deletevar = tkinter.StringVar()
-deletevar.set("Deleting Mode: True")
-deletestatelabel = tkinter.Label(root, textvariable=deletevar)
-deletestatelabel.pack()
 
 percentvar = tkinter.StringVar()
 percentvar.set('processing percentage')
@@ -379,9 +381,9 @@ huescale = tkinter.Scale(master=root, orient="horizontal", variable=hue, from_=-
 deletelabel = tkinter.Label(root, text='Deleting Size')  #文字ラベル設定
 deletescale = tkinter.Scale(master=root, orient="horizontal", variable=deletenum, from_=1, to=500)
 deletebutton = tkinter.Button(root, text='Delleting Mode', command=delete)
+setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
 modefrombutton = tkinter.Button(root, text='Color Mode (From)', command=setmodefrom)
 modetobutton = tkinter.Button(root, text='Color Mode (To)', command=setmodeto)
-setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
 testframelabel = tkinter.Label(root, text='Frame Number')  #文字ラベル設定
 testframescale = tkinter.Scale()
 framebutton = tkinter.Button(root, text='Process One Frame', command=testframefunc)
