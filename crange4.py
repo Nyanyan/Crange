@@ -31,10 +31,10 @@ def color_detect(img,color):
         a = [80+hue.get(),150,int(100 * lightness.get() / 100)]
         b = [140+hue.get(),255,255]
     elif color == 'red':
-        a = [160+hue.get(),50,int(100 * lightness.get() / 100)]
+        a = [150+hue.get(),0,int(100 * lightness.get() / 100)]
         b = [min(180,180+hue.get()),255,255]
     elif color == 'orange':
-        a = [0,100+hue.get(),int(200 * lightness.get() / 100)]
+        a = [0+hue.get(),0,int(200 * lightness.get() / 100)]
         b = [20+hue.get(),255,255]
     hsv_min = np.array(a)
     hsv_max = np.array(b)
@@ -62,7 +62,7 @@ def setdefault():
     lightness.set(50)
     hue.set(0)
     resize.set(0.5)
-    deletenum.set(100)
+    deletenum.set(60)
     deletingfalg = True
     deletevar.set("Deleting Mode: True")
     mode = False
@@ -149,8 +149,8 @@ def testframefunc():
         ret, frame_default = video.read()
     dst = copy.copy(frame_default)
     frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
-    colorarray0 = ['white','yellow','green','blue']
-    colorarray1 = ['blue','green','white','yellow']
+    colorarray0 = ['white','yellow','green','blue', 'red', 'orange']
+    colorarray1 = ['blue','green','white','yellow', 'red', 'orange']
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     if mode == True:
@@ -161,7 +161,7 @@ def testframefunc():
             nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)   
             if deleteflag == True:
                 for j in range(len(data)):
-                        if data[j][4] > pre1 or data[j][4] < pre1 / 100:
+                        if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
                             for k in range(len(labelImages)):
                                 if j in labelImages[k]:
                                     for o in range(len(labelImages[k])):
@@ -200,8 +200,8 @@ def mainprocessing():
         ret, frame_default = video.read()
         dst = copy.copy(frame_default)
         frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
-        colorarray0 = ['white','yellow','green','blue']
-        colorarray1 = ['blue','green','white','yellow']
+        colorarray0 = ['white','yellow','green','blue', 'red', 'orange']
+        colorarray1 = ['blue','green','white','yellow', 'red', 'orange']
         if mode == True:
             colorarray0, colorarray1 = colorarray1, colorarray0
         for i in range(len(colorarray0)):
@@ -210,7 +210,7 @@ def mainprocessing():
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                 if deleteflag == True:
                     for j in range(len(data)):
-                        if data[j][4] > pre1 or data[j][4] < pre1 / 100:
+                        if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
                             for k in range(len(labelImages)):
                                 if j in labelImages[k]:
                                     for o in range(len(labelImages[k])):
@@ -273,7 +273,7 @@ testframe = tkinter.IntVar(master=root)
 lightness = tkinter.IntVar(master=root,value=50)
 hue = tkinter.IntVar(master=root,value=0)
 resize = tkinter.DoubleVar(master=root,value=0.50)
-deletenum = tkinter.DoubleVar(master=root,value=100)
+deletenum = tkinter.DoubleVar(master=root,value=60)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
 mode = False #0: white to blue, 1: blue to white
