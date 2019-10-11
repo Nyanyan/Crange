@@ -82,6 +82,20 @@ def setmodefrom():
     if modefrom == 3:
         modefromvar.set("Color Mode (From): Japan Blue")
 
+def setmodeto():
+    global modeto
+    modeto += 1
+    if modeto == 4:
+        modeto = 0
+    if modeto == 0:
+        modetovar.set("Color Mode (To): White")
+    if modeto == 1:
+        modetovar.set("Color Mode (To): Blue")
+    if modeto == 2:
+        modetovar.set("Color Mode (To): Japan White")
+    if modeto == 3:
+        modetovar.set("Color Mode (To): Japan Blue")
+
 def delete():
     global deleteflag
     if deleteflag == True:
@@ -128,6 +142,7 @@ def inputvideo():
         deletescale.pack()
         deletebutton.pack()
         modefrombutton.pack()
+        modetobutton.pack()
         setdefaultbutton.pack()
         testframescale = tkinter.Scale(master=root, orient="horizontal", variable=testframe, from_=1, to=allframe)
         testframelabel.pack()
@@ -156,6 +171,14 @@ def testframefunc():
         colorarray0 = ['white','yellow','green','blue','red','orange']
     if modefrom == 3:
         colorarray0 = ['white','yellow','green','blue','red','orange']
+    if modeto == 0:
+        colorarray1 = ['white','yellow','green','blue','red','orange']
+    if modeto == 1:
+        colorarray1 = ['white','yellow','green','blue','red','orange']
+    if modeto == 2:
+        colorarray1 = ['white','yellow','green','blue','red','orange']
+    if modeto == 3:
+        colorarray1 = ['white','yellow','green','blue','red','orange']
     if mode == 1:
     for i in range(testframe.get()):
         ret, frame_default = video.read()
@@ -197,6 +220,7 @@ def mainprocessing():
         deletescale.config(state="disable")
         deletebutton.config(state="disable")
         modefrombutton.config(state="disable")
+        modetobutton.config(state="disable")
         setdefaultbutton.config(state="disable")
         startbutton.config(state="disable")
         print(VIDEOPATH)
@@ -328,6 +352,11 @@ modefromvar.set("Color Mode (From): White")
 modefromlabel = tkinter.Label(root, textvariable=modefromvar)
 modefromlabel.pack()
 
+modetovar = tkinter.StringVar()
+modetovar.set("Color Mode (To): White")
+modetolabel = tkinter.Label(root, textvariable=modetovar)
+modetolabel.pack()
+
 deletevar = tkinter.StringVar()
 deletevar.set("Deleting Mode: True")
 deletestatelabel = tkinter.Label(root, textvariable=deletevar)
@@ -352,6 +381,7 @@ deletelabel = tkinter.Label(root, text='Deleting Size')  #文字ラベル設定
 deletescale = tkinter.Scale(master=root, orient="horizontal", variable=deletenum, from_=1, to=500)
 deletebutton = tkinter.Button(root, text='Delleting Mode', command=delete)
 modefrombutton = tkinter.Button(root, text='Color Mode (From)', command=setmodefrom)
+modetobutton = tkinter.Button(root, text='Color Mode (To)', command=setmodeto)
 setdefaultbutton = tkinter.Button(root, text='Set Default', command=setdefault)
 testframelabel = tkinter.Label(root, text='Frame Number')  #文字ラベル設定
 testframescale = tkinter.Scale()
