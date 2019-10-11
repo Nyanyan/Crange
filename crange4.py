@@ -179,7 +179,6 @@ def testframefunc():
         colorarray1 = ['white','yellow','green','blue','red','orange']
     if modeto == 3:
         colorarray1 = ['white','yellow','green','blue','red','orange']
-    if mode == 1:
     for i in range(testframe.get()):
         ret, frame_default = video.read()
     dst = copy.copy(frame_default)
