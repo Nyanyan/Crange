@@ -70,12 +70,21 @@ def setdefault():
 
 def setmode():
     global mode
-    if mode == False:
-        mode = True
-        modevar.set("Color Mode: Blue to White")
-    else:
-        mode = False
+    mode += 1
+    if mode == 6:
+        mode = 0
+    if mode == 0:
         modevar.set("Color Mode: White to Blue")
+    if mode == 1:
+        modevar.set("Color Mode: White to Japan")
+    if mode == 2:
+        modevar.set("Color Mode: Blue to White")
+    if mode == 3:
+        modevar.set("Color Mode: Blue to Japan")
+    if mode == 4:
+        modevar.set("Color Mode: Japan to White")
+    if mode == 5:
+        modevar.set("Color Mode: Japan to Blue")
 
 def delete():
     global deleteflag
@@ -149,12 +158,8 @@ def testframefunc():
         ret, frame_default = video.read()
     dst = copy.copy(frame_default)
     frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
-    colorarray0 = ['white','yellow','green','blue', 'red', 'orange']
-    colorarray1 = ['blue','green','white','yellow', 'red', 'orange']
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
-    if mode == True:
-        colorarray0, colorarray1 = colorarray1, colorarray0
     for i in range(len(colorarray0)):
         mask = color_detect(frame,colorarray0[i])
         if np.count_nonzero(mask) > 0:
@@ -194,16 +199,15 @@ def mainprocessing():
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
+    if mode == 'wb':
+        colorarray0 = ['white','yellow','green','blue']
+        colorarray1 = ['blue','green','white','yellow']
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     if f < allframe and status == True:
         ret, frame_default = video.read()
         dst = copy.copy(frame_default)
         frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
-        colorarray0 = ['white','yellow','green','blue', 'red', 'orange']
-        colorarray1 = ['blue','green','white','yellow', 'red', 'orange']
-        if mode == True:
-            colorarray0, colorarray1 = colorarray1, colorarray0
         for i in range(len(colorarray0)):
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
@@ -276,7 +280,7 @@ resize = tkinter.DoubleVar(master=root,value=0.50)
 deletenum = tkinter.DoubleVar(master=root,value=60)
 VIDEOPATH = '' #ビデオパス
 OUTPUTPATH = ''
-mode = False #0: white to blue, 1: blue to white
+mode = 0 #wb->white to blue, wj->white to japan, bw->blue to white, bj->blue to japan, jw->japan to white, jb->japan to blue, 
 deleteflag = True
 
 
