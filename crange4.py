@@ -283,8 +283,8 @@ def stop():
 
 root = tkinter.Tk()
 root.title("Crange4.4")
-root.geometry("500x800")
-canvas = tkinter.Canvas(root, width = 500, height = 800)
+root.geometry("500x900")
+canvas = tkinter.Canvas(root, width = 500, height = 900)
 canvas.place(x=0,y=0)
 
 f = 0
