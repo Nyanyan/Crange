@@ -75,11 +75,11 @@ def setmodefrom():
         modefrom = 0
     if modefrom == 0:
         modefromvar.set("Color Mode (From): White")
-    if modefrom == 0:
+    if modefrom == 1:
         modefromvar.set("Color Mode (From): Blue")
-    if modefrom == 0:
+    if modefrom == 2:
         modefromvar.set("Color Mode (From): Japan White")
-    if modefrom == 0:
+    if modefrom == 3:
         modefromvar.set("Color Mode (From): Japan Blue")
 
 def delete():
@@ -148,6 +148,15 @@ def testframefunc():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate, testframe
     video = cv2.VideoCapture(VIDEOPATH)
     frame_default = []
+    if modefrom == 0:
+        colorarray0 = ['white','yellow','green','blue','red','orange']
+    if modefrom == 1:
+        colorarray0 = ['white','yellow','green','blue','red','orange']
+    if modefrom == 2:
+        colorarray0 = ['white','yellow','green','blue','red','orange']
+    if modefrom == 3:
+        colorarray0 = ['white','yellow','green','blue','red','orange']
+    if mode == 1:
     for i in range(testframe.get()):
         ret, frame_default = video.read()
     dst = copy.copy(frame_default)
@@ -193,10 +202,6 @@ def mainprocessing():
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
-    colorarray0 = ['white','yellow','green','blue','red','orange']
-    if mode == 0:
-        colorarray1 = ['blue','green','white','yellow','red','orange']
-    if mode == 1:
 
     
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
