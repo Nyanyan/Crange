@@ -76,15 +76,19 @@ def setmode():
     if mode == 0:
         modevar.set("Color Mode: White to Blue")
     if mode == 1:
-        modevar.set("Color Mode: White to Japan")
+        modevar.set("Color Mode: White to JapanWhite")
+    if mode == 1:
+        modevar.set("Color Mode: White to JapanBlue")
     if mode == 2:
         modevar.set("Color Mode: Blue to White")
     if mode == 3:
-        modevar.set("Color Mode: Blue to Japan")
+        modevar.set("Color Mode: Blue to JapanWhite")
+    if mode == 1:
+        modevar.set("Color Mode: Blue to JapanBlue")
     if mode == 4:
-        modevar.set("Color Mode: Japan to White")
+        modevar.set("Color Mode: JapanWhite to White")
     if mode == 5:
-        modevar.set("Color Mode: Japan to Blue")
+        modevar.set("Color Mode: JapanWhite to Blue")
 
 def delete():
     global deleteflag
@@ -106,8 +110,6 @@ def inputvideo():
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
         fps = int(video.get(cv2.CAP_PROP_FPS))
-        #allframe = int(video.get(CV_CAP_PROP_FRAME_COUNT))#総フレーム数
-        #rate = int(video.get(5)) #フレームレート
         video.release()
         allframe = 0
         video2 = cv2.VideoCapture(VIDEOPATH)
@@ -199,9 +201,12 @@ def mainprocessing():
         print(VIDEOPATH)
         print(OUTPUTPATH)
         print(mode)
-    if mode == 'wb':
-        colorarray0 = ['white','yellow','green','blue']
-        colorarray1 = ['blue','green','white','yellow']
+    colorarray0 = ['white','yellow','green','blue','red','orange']
+    if mode == 0:
+        colorarray1 = ['blue','green','white','yellow','red','orange']
+    if mode == 1:
+
+    
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     if f < allframe and status == True:
