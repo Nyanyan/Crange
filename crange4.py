@@ -229,7 +229,8 @@ def mainprocessing():
         startbutton.config(state="disable")
         print(VIDEOPATH)
         print(OUTPUTPATH)
-        print(mode)
+        print(modefrom)
+        print(modeto)
 
     #color array: DUFBLR
     if modefrom == 0:
@@ -240,7 +241,7 @@ def mainprocessing():
         colorarray0 = ['white','blue','green','yellow','red','orange']
     if modefrom == 3:
         colorarray0 = ['blue','white','green','yellow','orange','red']
-        
+
     if modeto == 0:
         colorarray1 = ['white','yellow','green','blue','red','orange']
     if modeto == 1:
@@ -306,7 +307,7 @@ def stop():
 
 
 root = tkinter.Tk()
-root.title("Crange4.4")
+root.title("Crange4.5")
 root.geometry("500x900")
 canvas = tkinter.Canvas(root, width = 500, height = 900)
 canvas.place(x=0,y=0)
