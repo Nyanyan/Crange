@@ -32,9 +32,11 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 2. Confirm “Input Path” and “Output Path”
    **Both path must be right paths**
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_1.png" width="300">
+   
 3. Press “Input Video” button
 4. Adjust processing values
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_2.png" width="300">
+
    * Compression
      The value of compressing masks, whose colors changes (The inputted video never be compressed)
    * Lightness
@@ -56,6 +58,7 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 5. Check status. If you start processing, the percentage will be displayed.
 6. Start (and stop) processing with following button. The window will be like the image.
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_3.png" width="300">
+
    * Start
      Start processing
    * Stop
@@ -162,6 +165,7 @@ Correspond to Japanese color
 6. 処理を開始/終了します。処理中の画面は以下のようになります。
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_3.png" width="300">
 
+   
    - Start
      処理を開始
    - Stop
