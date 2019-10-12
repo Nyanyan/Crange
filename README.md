@@ -143,7 +143,7 @@ Correspond to Japanese color
 
    - Deleting Size
 
-     Crangeは大きすぎる、小さすぎるマスクは色を変更しないように設定ができ、この値はその消去する面積に関する値です。この閾値よりも大きなマスクとこの閾値の1/10よりも小さなマスクは無視されます。
+     Crangeは大きすぎるマスクは色を変更しないように設定ができ、この値はその消去する面積に関する値です。この閾値よりも大きなマスクとこの閾値の1/10よりも小さなマスクは無視されます。
 
    - Deleting Mode
      大きい/小さいマスクを消去するかどうかのモード変更します。
@@ -165,7 +165,6 @@ Correspond to Japanese color
 6. 処理を開始/終了します。処理中の画面は以下のようになります。
    <img src="https://github.com/Nyanyan/Crange/blob/master/img/crange_3.png" width="300">
 
-   
    - Start
      処理を開始
    - Stop
