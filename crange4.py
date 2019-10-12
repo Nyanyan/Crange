@@ -165,22 +165,24 @@ def testframefunc():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate, testframe
     video = cv2.VideoCapture(VIDEOPATH)
     frame_default = []
+    #color array: DUFBLR
     if modefrom == 0:
         colorarray0 = ['white','yellow','green','blue','red','orange']
     if modefrom == 1:
-        colorarray0 = ['white','yellow','green','blue','red','orange']
+        colorarray0 = ['blue','green','white','yellow','red','orange']
     if modefrom == 2:
-        colorarray0 = ['white','yellow','green','blue','red','orange']
+        colorarray0 = ['white','blue','green','yellow','red','orange']
     if modefrom == 3:
-        colorarray0 = ['white','yellow','green','blue','red','orange']
+        colorarray0 = ['blue','white','green','yellow','orange','red']
+
     if modeto == 0:
         colorarray1 = ['white','yellow','green','blue','red','orange']
     if modeto == 1:
-        colorarray1 = ['white','yellow','green','blue','red','orange']
+        colorarray1 = ['blue','green','white','yellow','red','orange']
     if modeto == 2:
-        colorarray1 = ['white','yellow','green','blue','red','orange']
+        colorarray1 = ['white','blue','green','yellow','red','orange']
     if modeto == 3:
-        colorarray1 = ['white','yellow','green','blue','red','orange']
+        colorarray1 = ['blue','white','green','yellow','orange','red']
     for i in range(testframe.get()):
         ret, frame_default = video.read()
     dst = copy.copy(frame_default)
@@ -188,19 +190,20 @@ def testframefunc():
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
     for i in range(len(colorarray0)):
-        mask = color_detect(frame,colorarray0[i])
-        if np.count_nonzero(mask) > 0:
-            nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)   
-            if deleteflag == True:
-                for j in range(len(data)):
-                        if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
-                            for k in range(len(labelImages)):
-                                if j in labelImages[k]:
-                                    for o in range(len(labelImages[k])):
-                                        if labelImages[k][o] == j:
-                                            mask[k][o] = 0         
-        mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
-        dst = changecolor(height,width,dst,mask,colorarray1[i])
+        if colorarray0[i] != colorarray1[i]:
+            mask = color_detect(frame,colorarray0[i])
+            if np.count_nonzero(mask) > 0:
+                nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)   
+                if deleteflag == True:
+                    for j in range(len(data)):
+                            if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
+                                for k in range(len(labelImages)):
+                                    if j in labelImages[k]:
+                                        for o in range(len(labelImages[k])):
+                                            if labelImages[k][o] == j:
+                                                mask[k][o] = 0         
+            mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
+            dst = changecolor(height,width,dst,mask,colorarray1[i])
     cv2.imshow('test frame',dst)
     #k = cv2.waitKey(rate)
 
@@ -228,6 +231,24 @@ def mainprocessing():
         print(OUTPUTPATH)
         print(mode)
 
+    #color array: DUFBLR
+    if modefrom == 0:
+        colorarray0 = ['white','yellow','green','blue','red','orange']
+    if modefrom == 1:
+        colorarray0 = ['blue','green','white','yellow','red','orange']
+    if modefrom == 2:
+        colorarray0 = ['white','blue','green','yellow','red','orange']
+    if modefrom == 3:
+        colorarray0 = ['blue','white','green','yellow','orange','red']
+        
+    if modeto == 0:
+        colorarray1 = ['white','yellow','green','blue','red','orange']
+    if modeto == 1:
+        colorarray1 = ['blue','green','white','yellow','red','orange']
+    if modeto == 2:
+        colorarray1 = ['white','blue','green','yellow','red','orange']
+    if modeto == 3:
+        colorarray1 = ['blue','white','green','yellow','orange','red']
     
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
@@ -236,19 +257,20 @@ def mainprocessing():
         dst = copy.copy(frame_default)
         frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
         for i in range(len(colorarray0)):
-            mask = color_detect(frame,colorarray0[i])
-            if np.count_nonzero(mask) > 0:
-                nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                if deleteflag == True:
-                    for j in range(len(data)):
-                        if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
-                            for k in range(len(labelImages)):
-                                if j in labelImages[k]:
-                                    for o in range(len(labelImages[k])):
-                                        if labelImages[k][o] == j:
-                                            mask[k][o] = 0
-            mask = cv2.resize(mask, dsize=None, fx=pre2, fy=pre2)
-            dst = changecolor(height,width,dst,mask,colorarray1[i])
+            if colorarray0[i] != colorarray1[i]:
+                mask = color_detect(frame,colorarray0[i])
+                if np.count_nonzero(mask) > 0:
+                    nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
+                    if deleteflag == True:
+                        for j in range(len(data)):
+                            if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
+                                for k in range(len(labelImages)):
+                                    if j in labelImages[k]:
+                                        for o in range(len(labelImages[k])):
+                                            if labelImages[k][o] == j:
+                                                mask[k][o] = 0
+                mask = cv2.resize(mask, dsize=None, fx=pre2, fy=pre2)
+                dst = changecolor(height,width,dst,mask,colorarray1[i])
         #cv2.imshow('output',dst)
         #k = cv2.waitKey(rate)
         writer.write(dst)
