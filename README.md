@@ -91,6 +91,10 @@ Speed up
 
 Fixed bug
 
+### Crange 4.5
+
+Correspond to Japanese color
+
 ## 概要
 
 世の中には大きく分けて3種類のキューバーがいます。白クロス、青クロス、CNです。
@@ -193,3 +197,6 @@ Fixed bug
 
 バグ修正
 
+### Crange 4.5
+
+日本配色に対応

@@ -87,7 +87,13 @@ Easier to use
 
 Speed up
 
+### Crange 4.4
 
+Fixed bug
+
+### Crange 4.5
+
+Correspond to Japanese color
 
 ## 概要
 
@@ -186,3 +192,11 @@ Speed up
 使いやすく
 
 高速化
+
+### Crange 4.4
+
+バグ修正
+
+### Crange 4.5
+
+日本配色に対応
