@@ -24,7 +24,7 @@ You may feel confused if you see a video in which different-color-crossed cuber 
 ### Through GitHub
 
 1. Clone repository
-2. Execute “crangeX.py” or “build/exe.win-amd64-3.7/crangeX.exe”
+2. Execute “archive/crangeX/crangeX.exe”
 
 ## How to Use
 
@@ -117,7 +117,7 @@ Correspond to Japanese color
 ### GitHubから
 
 1. リポジトリをクローンしてください。
-2. 開発環境で“crangeX.py”を実行するか、“build/exe.win-amd64-3.7/crangeX.exe”を実行してください。
+2. “archive/crangeX/crangeX.exe”を実行してください。
 
 ## 使い方
 
