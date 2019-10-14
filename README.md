@@ -5,6 +5,36 @@ Change cross color of speed cubing video
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/Nyanyan/Crange)[![GitHub license](https://img.shields.io/github/license/Nyanyan/Crange)](https://github.com/Nyanyan/Crange/blob/master/LICENSE)[![GitHub stars](https://img.shields.io/github/stars/Nyanyan/Crange)](https://github.com/Nyanyan/Crange/stargazers)![GitHub top language](https://img.shields.io/github/languages/top/Nyanyan/Crange)![GitHub language count](https://img.shields.io/github/languages/count/Nyanyan/Crange)![GitHub repo size](https://img.shields.io/github/repo-size/Nyanyan/Crange)![GitHub followers](https://img.shields.io/github/followers/Nyanyan?style=social)![Twitter Follow](https://img.shields.io/twitter/follow/Nyanyan_Cube?style=social)
 
+<!-- TOC -->
+
+- [Crange](#crange)
+    - [Abstract](#abstract)
+    - [How to Install](#how-to-install)
+        - [Through zip file](#through-zip-file)
+        - [Through GitHub](#through-github)
+    - [How to Use](#how-to-use)
+    - [Release Note](#release-note)
+        - [Crange 4.0](#crange-40)
+        - [Crange 4.1](#crange-41)
+        - [Crange 4.2](#crange-42)
+        - [Crange 4.3](#crange-43)
+        - [Crange 4.4](#crange-44)
+        - [Crange 4.5](#crange-45)
+    - [概要](#概要)
+    - [インストール方法](#インストール方法)
+        - [Zipファイルから](#zipファイルから)
+        - [GitHubから](#githubから)
+    - [使い方](#使い方)
+    - [リリースノート](#リリースノート)
+        - [Crange 4.0](#crange-40)
+        - [Crange 4.1](#crange-41)
+        - [Crange 4.2](#crange-42)
+        - [Crange 4.3](#crange-43)
+        - [Crange 4.4](#crange-44)
+        - [Crange 4.5](#crange-45)
+
+<!-- /TOC -->
+
 ## Abstract
 
 Are you a white-crossed cuber, or a blue-crossed cuber(, or color neutral)?
