@@ -3,6 +3,8 @@ Change cross color of speed cubing video
 
 **日本語は下部にあります。**
 
+![GitHub last commit](https://img.shields.io/github/last-commit/Nyanyan/Crange)[![GitHub license](https://img.shields.io/github/license/Nyanyan/Crange)](https://github.com/Nyanyan/Crange/blob/master/LICENSE)[![GitHub stars](https://img.shields.io/github/stars/Nyanyan/Crange)](https://github.com/Nyanyan/Crange/stargazers)![GitHub top language](https://img.shields.io/github/languages/top/Nyanyan/Crange)![GitHub language count](https://img.shields.io/github/languages/count/Nyanyan/Crange)![GitHub repo size](https://img.shields.io/github/repo-size/Nyanyan/Crange)![GitHub followers](https://img.shields.io/github/followers/Nyanyan?style=social)![Twitter Follow](https://img.shields.io/twitter/follow/Nyanyan_Cube?style=social)
+
 ## Abstract
 
 Are you a white-crossed cuber, or a blue-crossed cuber(, or color neutral)?
