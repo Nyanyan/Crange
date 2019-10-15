@@ -6,10 +6,7 @@ import copy
 import sys
 import tkinter
 import os
-#from pydub import AudioSegment
-#import ffmpeg
 from moviepy.video.io.VideoFileClip import VideoFileClip
-#import moviepy.editor as mp
 
 def color_detect(img,color):
     # HSV色空間に変換
@@ -342,8 +339,6 @@ pathlabel = tkinter.Label(root, text='Input Path')
 pathlabel.pack()
 videopathbox = tkinter.Entry(width=50)
 videopathbox.pack()
-#pathbutton = tkinter.Button(root, text='Input Path Confirm', command=pathfunc)
-#pathbutton.pack()
 
 virtuallabel1 = tkinter.Label(root, text='')
 virtuallabel1.pack()
@@ -352,8 +347,6 @@ outpathlabel = tkinter.Label(root, text='Output Path')
 outpathlabel.pack()
 outpathbox = tkinter.Entry(width=50)
 outpathbox.pack()
-#outpathbutton = tkinter.Button(root, text='Output Path Confirm', command=outpathfunc)
-#outpathbutton.pack()
 
 virtuallabel2 = tkinter.Label(root, text='')
 virtuallabel2.pack()
