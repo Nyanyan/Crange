@@ -41,6 +41,10 @@ Are you a white-crossed cuber, or a blue-crossed cuber(, or color neutral)?
 
 You may feel confused if you see a video in which different-color-crossed cuber do something. This software, Crange, changes the cross color of that kind of video. Crange is named after “Change” and “Cross”.
 
+PV on YouTube:
+
+https://youtu.be/uY8mWv1GIjQ
+
 ## How to Install
 
 **This software supports only Windows 32 & 64 bit, Tested Windows10 64bit only**
@@ -135,6 +139,10 @@ Correspond to Japanese color
 世の中には大きく分けて3種類のキューバーがいます。白クロス、青クロス、CNです。
 
 もしあなたが白クロスだとして、見たい動画が青クロスだったとします。特にこの動画が何かの解説をする動画であった場合、その動画はこの流派のち外のためにとても見にくいものであるでしょう。この“Crange”というソフトウェアは、動画中のキューブのクロス色を変更します。“Crange”は“Change”と“Cross”から命名されました。
+
+プロモーションビデオ(YouTube):
+
+https://youtu.be/uY8mWv1GIjQ
 
 ## インストール方法
 
