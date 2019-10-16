@@ -189,7 +189,7 @@ def testframefunc():
     frame = cv2.resize(frame_default, dsize=None, fx=resize.get(), fy=resize.get())
     pre1 = 1 / deletenum.get() * width * height * resize.get() ** 2
     pre2 = 1 / resize.get()
-    for i in range(len(colorarray0)):
+    for i in range(6):
         if colorarray0[i] != colorarray1[i]:
             mask = color_detect(frame,colorarray0[i])
             if np.count_nonzero(mask) > 0:
@@ -201,7 +201,7 @@ def testframefunc():
                                     if j in labelImages[k]:
                                         for o in range(len(labelImages[k])):
                                             if labelImages[k][o] == j:
-                                                mask[k][o] = 0         
+                                                mask[k][o] = 0
             mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
             dst = changecolor(height,width,dst,mask,colorarray1[i])
     cv2.imshow('test frame',dst)
