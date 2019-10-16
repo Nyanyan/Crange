@@ -285,12 +285,6 @@ def mainprocessing():
         status = False
         percentvar.set('Sound Encoding')
         stopsec = f / fps
-        '''
-        clip_input = AudioSegment.from_file(VIDEOPATH, "mp4")
-        clip_input = sound[:stopsec * 1000]
-        clip_output = ffmpeg.output("video.mp4", clip_input, OUTPUTPATH, vcodec="copy", acodec="aac")
-        ffmpeg.run(clip_output)
-        '''
         clip_input = VideoFileClip(VIDEOPATH).subclip(0,stopsec)
         clip_input.audio.write_audiofile('audio.mp3')
         clip_output = VideoFileClip('video.mp4').subclip(0,stopsec)
