@@ -264,7 +264,7 @@ def mainprocessing():
                     nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
                     if deleteflag == True:
                         for j in range(len(data)):
-                            if data[j][4] > pre1:# or data[j][4] < pre1 / 100:
+                            if data[j][4] > pre1:
                                 for k in range(len(labelImages)):
                                     if j in labelImages[k]:
                                         for o in range(len(labelImages[k])):
