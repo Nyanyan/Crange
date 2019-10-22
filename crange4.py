@@ -113,8 +113,32 @@ def inputvideo():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate, VIDEOPATH, OUTPUTPATH, testframe
     VIDEOPATH = videopathbox.get()
     OUTPUTPATH = outpathbox.get()
+    OUTPUTNAME = outnamebox.get()
     video = cv2.VideoCapture(VIDEOPATH)
-    if video.isOpened() and OUTPUTPATH != '':
+    errorflag = False
+    if video.isOpened() != True:
+        errorflag = True
+        warning = tkinter.Tk()
+        warning.title("Warning")
+        warning.geometry("100x100")
+        warninglabel = tkinter.Label(warning,text="Input Path Wrong")
+        warninglabel.pack()
+    if os.path.exists(OUTPUTPATH) != True:
+        errorflag = True
+        warning = tkinter.Tk()
+        warning.title("Warning")
+        warning.geometry("100x100")
+        warninglabel = tkinter.Label(warning,text="Output Path Wrong")
+        warninglabel.pack()
+    namelen = len(OUTPUTNAME)
+    if namelen < 5 or (OUTPUTNAME[namelen-3:namelen-1] == '.mp4'):
+        errorflag = True
+        warning = tkinter.Tk()
+        warning.title("Warning")
+        warning.geometry("100x100")
+        warninglabel = tkinter.Label(warning,text="Output Video Name Wrong")
+        warninglabel.pack()
+    if errorflag != True:
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
         fps = int(video.get(cv2.CAP_PROP_FPS))
@@ -127,7 +151,6 @@ def inputvideo():
                 break  # 映像取得に失敗
             else:
                 allframe += 1
-
         videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
         inputvideobutton.config(state="disable")
         outpathbox.config(state="disable")
@@ -153,12 +176,6 @@ def inputvideo():
         framebutton.pack()
         startbutton.pack(fill='x')
         stopbutton.pack(fill='x')
-    else:
-        videoopenwarning = tkinter.Tk()
-        videoopenwarning.title("Warning")
-        videoopenwarning.geometry("100x100")
-        warninglabel = tkinter.Label(videoopenwarning,text="Input Right Path")
-        warninglabel.pack()
 
 
 def testframefunc():
@@ -337,10 +354,15 @@ videopathbox.pack()
 virtuallabel1 = tkinter.Label(root, text='')
 virtuallabel1.pack()
 
-outpathlabel = tkinter.Label(root, text='Output Path')
+outpathlabel = tkinter.Label(root, text='Output Folder')
 outpathlabel.pack()
 outpathbox = tkinter.Entry(width=50)
 outpathbox.pack()
+
+outnamelabel = tkinter.Label(root, text='Output name')
+outnamelabel.pack()
+outnamebox = tkinter.Entry(width=50)
+outnamebox.pack()
 #outpathbutton = tkinter.Button(root, text='Output Path Confirm', command=outpathfunc)
 #outpathbutton.pack()
 
