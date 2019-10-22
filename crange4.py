@@ -279,7 +279,7 @@ def mainprocessing():
     else:
         writer.release()
         status = False
-        percentvar.set('Sound Encoding')
+        #percentvar.set('Sound Encoding')
         stopsec = f / fps
         clip_input = VideoFileClip(VIDEOPATH).subclip(0,stopsec)
         clip_input.audio.write_audiofile('audio.mp3')
