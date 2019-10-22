@@ -109,6 +109,15 @@ def delete():
         deletevar.set("Deleting Mode: True")
         deletescale.config(state="active")
 
+def warning(message):
+    warning = tkinter.Tk()
+    warning.title("Warning")
+    warning.geometry("200x200")
+    warninglabel = tkinter.Label(warning,text=message)
+    warninglabel.pack()
+    breakbutton = tkinter.Button(warning, text='OK', command=warning.destroy)
+    breakbutton.pack()
+
 def inputvideo():
     global video, height, width, fps, fourcc, writer, allframe, percent, rate, VIDEOPATH, OUTPUTPATH, testframe
     VIDEOPATH = videopathbox.get()
@@ -118,26 +127,14 @@ def inputvideo():
     errorflag = False
     if video.isOpened() != True:
         errorflag = True
-        warning = tkinter.Tk()
-        warning.title("Warning")
-        warning.geometry("100x100")
-        warninglabel = tkinter.Label(warning,text="Input Path Wrong")
-        warninglabel.pack()
+        warning('Input Path Wrong')
     if os.path.exists(OUTPUTPATH) != True:
         errorflag = True
-        warning = tkinter.Tk()
-        warning.title("Warning")
-        warning.geometry("100x100")
-        warninglabel = tkinter.Label(warning,text="Output Path Wrong")
-        warninglabel.pack()
+        warning('Output Path Wrong')
     namelen = len(OUTPUTNAME)
     if namelen < 5 or (OUTPUTNAME[namelen-4:namelen] != '.mp4'):
         errorflag = True
-        warning = tkinter.Tk()
-        warning.title("Warning")
-        warning.geometry("100x100")
-        warninglabel = tkinter.Label(warning,text="Output Video Name Wrong")
-        warninglabel.pack()
+        warning('Output Video Name Wrong \n video must be .mp4')
     if errorflag != True:
         height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
         width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
