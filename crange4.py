@@ -192,16 +192,15 @@ def testframefunc():
     for i in range(6):
         if colorarray0[i] != colorarray1[i]:
             mask = color_detect(frame,colorarray0[i])
-            if np.count_nonzero(mask) > 0:
+            if np.count_nonzero(mask) > 0 and deleteflag == True:
                 nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)   
-                if deleteflag == True:
-                    for j in range(len(data)):
-                            if data[j][4] > pre1:
-                                for k in range(len(labelImages)):
-                                    if j in labelImages[k]:
-                                        for o in range(len(labelImages[k])):
-                                            if labelImages[k][o] == j:
-                                                mask[k][o] = 0
+                for j in range(len(data)):
+                        if data[j][4] > pre1:
+                            for k in range(len(labelImages)):
+                                if j in labelImages[k]:
+                                    for o in range(len(labelImages[k])):
+                                        if labelImages[k][o] == j:
+                                            mask[k][o] = 0
             mask = cv2.resize(mask, dsize=None, fx=1 / resize.get(), fy=1 / resize.get())
             dst = changecolor(height,width,dst,mask,colorarray1[i])
     cv2.imshow('test frame',dst)
@@ -260,16 +259,15 @@ def mainprocessing():
         for i in range(len(colorarray0)):
             if colorarray0[i] != colorarray1[i]:
                 mask = color_detect(frame,colorarray0[i])
-                if np.count_nonzero(mask) > 0:
+                if np.count_nonzero(mask) > 0 and deleteflag == True:
                     nLabels, labelImages, data, center = cv2.connectedComponentsWithStats(mask)
-                    if deleteflag == True:
-                        for j in range(len(data)):
-                            if data[j][4] > pre1:
-                                for k in range(len(labelImages)):
-                                    if j in labelImages[k]:
-                                        for o in range(len(labelImages[k])):
-                                            if labelImages[k][o] == j:
-                                                mask[k][o] = 0
+                    for j in range(len(data)):
+                        if data[j][4] > pre1:
+                            for k in range(len(labelImages)):
+                                if j in labelImages[k]:
+                                    for o in range(len(labelImages[k])):
+                                        if labelImages[k][o] == j:
+                                            mask[k][o] = 0
                 mask = cv2.resize(mask, dsize=None, fx=pre2, fy=pre2)
                 dst = changecolor(height,width,dst,mask,colorarray1[i])
         writer.write(dst)
