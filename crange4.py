@@ -154,6 +154,7 @@ def inputvideo():
         videolabelvar.set("height:"+str(height)+" width:"+str(width)+" framecnt:"+str(allframe)+" fps:"+str(fps))
         inputvideobutton.config(state="disable")
         outpathbox.config(state="disable")
+        outnamebox.config(state="disable")
         videopathbox.config(state="disable")
         explainlabel2.pack()
         videolabel.pack()
