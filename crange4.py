@@ -131,7 +131,7 @@ def inputvideo():
         warninglabel = tkinter.Label(warning,text="Output Path Wrong")
         warninglabel.pack()
     namelen = len(OUTPUTNAME)
-    if namelen < 5 or (OUTPUTNAME[namelen-3:namelen-1] == '.mp4'):
+    if namelen < 5 or (OUTPUTNAME[namelen-4:namelen] != '.mp4'):
         errorflag = True
         warning = tkinter.Tk()
         warning.title("Warning")
