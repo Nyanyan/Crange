@@ -272,8 +272,6 @@ def mainprocessing():
                                                 mask[k][o] = 0
                 mask = cv2.resize(mask, dsize=None, fx=pre2, fy=pre2)
                 dst = changecolor(height,width,dst,mask,colorarray1[i])
-        #cv2.imshow('output',dst)
-        #k = cv2.waitKey(rate)
         writer.write(dst)
         f += 1
         percent = int(f / allframe * 100)
@@ -293,7 +291,6 @@ def mainprocessing():
         os.remove('video.mp4')
         os.remove('audio.mp3')
         percentvar.set('Finished')
-        #root.destroy()
 
 def stop():
     global status
